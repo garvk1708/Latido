@@ -2,11 +2,12 @@ import streamlit as st
 import time
 from spotify_client import (
     create_spotify_client, get_user_profile, get_top_tracks,
-    get_top_artists, get_recent_tracks, get_audio_features
+    get_top_artists, get_recent_tracks, get_audio_features,
+    get_top_albums
 )
 from analysis import (
     process_audio_features, analyze_mood, get_genre_distribution,
-    calculate_listening_trends, analyze_music_patterns
+    calculate_listening_trends, analyze_music_patterns, cluster_tracks
 )
 from visualizations import (
     create_audio_features_radar, create_genre_bar_chart,
@@ -66,6 +67,20 @@ def display_artist_item(artist, index):
             </div>
         </div>
     ''', unsafe_allow_html=True)
+    
+def display_album_item(album, index):
+    """Display an album with cover art and hover effects."""
+    st.markdown(f'''
+        <div class="track-item">
+            <div class="track-number">{index}</div>
+            <img src="{album['images'][0]['url']}" 
+                 class="track-image" alt="{album['name']}">
+            <div class="track-info">
+                <div class="track-name">{album['name']}</div>
+                <div class="track-artist">{album['artists'][0]['name']}</div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
 
 def main():
     # Inject JavaScript for device detection
@@ -96,12 +111,25 @@ def main():
     use_simulation = st.sidebar.checkbox("Use Demo Mode", value=True, 
                                        help="Try the dashboard with simulated data")
 
+    # Time range filter
+    time_range = st.sidebar.selectbox(
+        "📅 Select time range",
+        options=[
+            ("short_term", "Last 4 weeks"),
+            ("medium_term", "Last 6 months"),
+            ("long_term", "All time")
+        ],
+        format_func=lambda x: x[1],
+        index=1  # Default to medium_term
+    )[0]
+    
     if use_simulation:
         # Use simulated data
-        data = get_simulated_data()
+        data = get_simulated_data(time_range)
         profile = data['profile']
         top_tracks = data['top_tracks']
         top_artists = data['top_artists']
+        top_albums = data['top_albums']
         recent_tracks = data['recent_tracks']
         audio_features = data['audio_features']
     else:
@@ -109,19 +137,11 @@ def main():
         try:
             sp = create_spotify_client()
             profile = get_user_profile(sp)
-            time_range = st.sidebar.selectbox(
-                "📅 Select time range",
-                options=[
-                    ("short_term", "Last 4 weeks"),
-                    ("medium_term", "Last 6 months"),
-                    ("long_term", "All time")
-                ],
-                format_func=lambda x: x[1]
-            )[0]
 
             with st.spinner("🎼 Analyzing your music..."):
                 top_tracks = get_top_tracks(sp, time_range)
                 top_artists = get_top_artists(sp, time_range)
+                top_albums = get_top_albums(sp, time_range)
                 recent_tracks = get_recent_tracks(sp)
 
                 if all([top_tracks, top_artists, recent_tracks]):
@@ -157,18 +177,60 @@ def main():
         music_patterns = analyze_music_patterns(audio_features_df)
         genres = get_genre_distribution(top_artists)
         listening_trends = calculate_listening_trends(recent_tracks)
-
-        # Display mood insights in a responsive layout
+        
+        # AI-powered track clusters
+        track_clusters = cluster_tracks(audio_features_df)
+        
+        # Define music personality types based on analysis
+        personality_types = {
+            'explorer': mood_analysis['mood_diversity_score'] > 70,
+            'enthusiast': mood_analysis['emotional_stats']['energy'] > 0.7,
+            'analyst': music_patterns['complexity_score'] > 60,
+            'nostalgic': music_patterns['acoustic_electronic_ratio'] > 2.0,
+            'rhythm_driven': music_patterns['tempo_patterns']['tempo_variation'] < 10
+        }
+        
+        # Determine top traits
+        top_traits = [k for k, v in personality_types.items() if v]
+        if not top_traits:
+            top_traits = ['balanced']
+            
+        music_personality = {
+            'explorer': "Music Explorer: You seek diverse sounds and experiences.",
+            'enthusiast': "Energy Enthusiast: You gravitate toward high-energy music.",
+            'analyst': "Sonic Analyst: You appreciate musical complexity and detail.",
+            'nostalgic': "Acoustic Nostalgic: You prefer traditional sounds over electronic.",
+            'rhythm_driven': "Rhythm Driven: You connect with consistent beats and tempos.",
+            'balanced': "Musical Omnivore: You have a balanced and diverse taste profile."
+        }
+        
+        # Extract primary and secondary traits
+        primary_trait = top_traits[0] if top_traits else 'balanced'
+        primary_description = music_personality[primary_trait]
+        
+        # Additional AI insights
+        listening_personality = f"Based on your {listening_trends['listening_sessions']} listening sessions, you enjoy {genres[0][0] if genres else 'diverse'} music most during {listening_trends['peak_hour']}:00."
+        
+        # Display enhanced AI insights in a responsive layout
         st.markdown(
             f'''
             <div class="stat-card">
-                <h3 class="gradient-text">Your Music Personality</h3>
-                <p style="font-size: 1.2rem;">{mood_analysis['primary_mood']}</p>
-                <div style="margin-top: 1rem;">
-                    <span class="gradient-text" style="font-size: 1.5rem;">
-                        {mood_analysis['mood_diversity_score']}%
-                    </span>
-                    <span style="color: #888;"> Mood Diversity Score</span>
+                <h3 class="gradient-text">Your AI Music Personality</h3>
+                <p style="font-size: 1.2rem;">{primary_description}</p>
+                <p style="font-size: 0.9rem; color: #888; margin-top: 0.5rem;">{listening_personality}</p>
+                <div style="margin-top: 1rem; display: flex; justify-content: space-between; flex-wrap: wrap;">
+                    <div>
+                        <span class="gradient-text" style="font-size: 1.5rem;">
+                            {mood_analysis['mood_diversity_score']}%
+                        </span>
+                        <span style="color: #888;"> Diversity</span>
+                    </div>
+                    <div>
+                        <span class="gradient-text" style="font-size: 1.5rem;">
+                            {music_patterns['complexity_score']}%
+                        </span>
+                        <span style="color: #888;"> Complexity</span>
+                    </div>
                 </div>
             </div>
             ''',
@@ -201,7 +263,7 @@ def main():
         )
         st.markdown('</div>', unsafe_allow_html=True)
 
-        # Responsive layout for tracks and artists
+        # Responsive layout for tracks, artists, and albums
         # For larger screens use columns, for mobile stack vertically
         if st.session_state.get("mobile_view", False):
             # Mobile view - stacked layout
@@ -213,10 +275,15 @@ def main():
             st.subheader("👥 Top Artists")
             for i, artist in enumerate(top_artists['items'][:5], 1):
                 display_artist_item(artist, i)
+                
+            st.subheader("💿 Top Albums")
+            for i, album in enumerate(top_albums['items'][:5], 1):
+                display_album_item(album, i)
             st.markdown('</div>', unsafe_allow_html=True)
         else:
             # Desktop view - side by side
-            col1, col2 = st.columns(2)
+            st.markdown("<h2 class='section-header'>Your Top Music</h2>", unsafe_allow_html=True)
+            col1, col2, col3 = st.columns(3)
             with col1:
                 st.markdown('<div class="scroll-fade">', unsafe_allow_html=True)
                 st.subheader("🎵 Top Tracks")
@@ -229,6 +296,13 @@ def main():
                 st.subheader("👥 Top Artists")
                 for i, artist in enumerate(top_artists['items'][:5], 1):
                     display_artist_item(artist, i)
+                st.markdown('</div>', unsafe_allow_html=True)
+                
+            with col3:
+                st.markdown('<div class="scroll-fade">', unsafe_allow_html=True)
+                st.subheader("💿 Top Albums")
+                for i, album in enumerate(top_albums['items'][:5], 1):
+                    display_album_item(album, i)
                 st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":

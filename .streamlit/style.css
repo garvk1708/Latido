@@ -247,6 +247,68 @@ html, body, [class*="css"] {
     background: #1ed760;
 }
 
+/* Section headers */
+.section-header {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    background: linear-gradient(90deg, #1DB954, #4CAF50);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 10px 0;
+}
+
+/* Mobile-specific adjustments */
+@media screen and (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2.2rem !important;
+    }
+
+    .track-item {
+        padding: 8px !important;
+    }
+
+    .stat-card {
+        padding: 12px !important;
+        margin-bottom: 15px !important;
+    }
+
+    /* Ensure charts don't overflow */
+    .chart-container {
+        overflow-x: auto;
+        width: 100%;
+    }
+
+    /* Improve touch targets */
+    button, select, a {
+        min-height: 36px !important;
+        min-width: 36px !important;
+    }
+}
+
+/* Tablet adjustments */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    /* Adjust columns for better tablet experience */
+    .row-widget.stHorizontal > div {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+    }
+
+    /* Stack charts on medium screens */
+    .chart-container > div {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+        margin-bottom: 15px;
+    }
+}
+
+/* High-DPI screens (retina) */
+@media screen and (min-resolution: 192dpi) {
+    .track-image {
+        image-rendering: -webkit-optimize-contrast;
+    }
+}
+
 /* Improve column rendering on mobile */
 @media (max-width: 768px) {
     .chart-container {

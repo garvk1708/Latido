@@ -80,19 +80,42 @@ def generate_artist(index):
         'popularity': random.randint(30, 100)
     }
 
+def generate_album(index):
+    """Generate a simulated album."""
+    album_types = ['Album', 'EP', 'Single', 'Compilation']
+    album_names = ['Neon Dreams', 'Digital Horizons', 'Quantum Pulse', 
+                  'Synthetic Memories', 'Virtual Reality', 'Electric Forest']
+    
+    return {
+        'id': f'album_{index}',
+        'name': f'{random.choice(album_names)} {index}',
+        'album_type': random.choice(album_types),
+        'release_date': f"202{random.randint(0, 3)}-{random.randint(1, 12):02d}-{random.randint(1, 28):02d}",
+        'total_tracks': random.randint(5, 15),
+        'images': [{
+            'url': f'https://picsum.photos/seed/album_{index}/300'
+        }],
+        'artists': [{
+            'name': f'Artist {random.randint(1, 10)}'
+        }]
+    }
+
 def get_simulated_data(time_range='medium_term'):
     """Get all simulated data for the application."""
     track_count = 20
     artist_count = 20
+    album_count = 10
 
     tracks = [generate_track(i) for i in range(track_count)]
     artists = [generate_artist(i) for i in range(artist_count)]
+    albums = [generate_album(i) for i in range(album_count)]
     audio_features = [generate_audio_features() for _ in range(track_count)]
 
     return {
         'profile': generate_simulated_profile(),
         'top_tracks': {'items': tracks},
         'top_artists': {'items': artists},
+        'top_albums': {'items': albums},
         'recent_tracks': generate_recent_tracks(),
         'audio_features': audio_features
     }

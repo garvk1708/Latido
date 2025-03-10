@@ -108,3 +108,22 @@ def get_audio_features(sp, track_ids):
     except Exception as e:
         st.error(f"Error fetching audio features: {str(e)}")
         return None
+
+def get_top_albums(sp, time_range='medium_term', limit=10):
+    """Get user's top albums based on their top tracks."""
+    try:
+        top_tracks = sp.current_user_top_tracks(limit=limit*2, offset=0, time_range=time_range)
+        
+        # Extract unique albums from top tracks
+        albums = {}
+        for track in top_tracks['items']:
+            album_id = track['album']['id']
+            if album_id not in albums:
+                albums[album_id] = track['album']
+        
+        # Convert to list and limit to requested number
+        album_list = list(albums.values())[:limit]
+        return {'items': album_list}
+    except Exception as e:
+        st.error(f"Error fetching top albums: {str(e)}")
+        return None
