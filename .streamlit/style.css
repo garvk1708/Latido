@@ -1,9 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
-/* Base styles */
+/* Base styles with modern dark theme */
 html, body, [class*="css"] {
     font-family: 'Montserrat', sans-serif;
     color: #FFFFFF;
+    background-color: #121212;
+}
+
+/* Hero section with glassmorphism */
+.hero-section {
+    background: linear-gradient(135deg, rgba(29, 185, 84, 0.1) 0%, rgba(18, 18, 18, 0.95) 100%);
+    backdrop-filter: blur(10px);
+    padding: 3rem 2rem;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    text-align: center;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    animation: heroFadeIn 1s ease-out forwards;
+}
+
+@keyframes heroFadeIn {
+    from { 
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+        filter: blur(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
 }
 
 /* Modern card styling with glassmorphism */
@@ -16,6 +43,8 @@ html, body, [class*="css"] {
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     margin-bottom: 1rem;
+    opacity: 0;
+    animation: cardSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .stat-card:hover {
@@ -24,36 +53,7 @@ html, body, [class*="css"] {
     border-color: rgba(29, 185, 84, 0.3);
 }
 
-/* Buttons */
-.stButton > button {
-    background: linear-gradient(45deg, #1DB954, #1ed760);
-    color: white;
-    border-radius: 25px;
-    padding: 0.6rem 2.5rem;
-    border: none;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(29, 185, 84, 0.2);
-}
-
-.stButton > button:hover {
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 6px 20px rgba(29, 185, 84, 0.3);
-}
-
-/* Metrics */
-div[data-testid="stMetricValue"] {
-    font-size: 2.2rem;
-    font-weight: 700;
-    background: linear-gradient(120deg, #1DB954, #1ed760);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    transition: all 0.3s ease;
-}
-
-/* Advanced animations */
-@keyframes slideIn {
+@keyframes cardSlideIn {
     from {
         opacity: 0;
         transform: translateY(30px);
@@ -64,79 +64,161 @@ div[data-testid="stMetricValue"] {
     }
 }
 
-@keyframes fadeIn {
+/* Album art container */
+.album-art {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.album-art:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(29, 185, 84, 0.2);
+}
+
+.album-art::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.album-art:hover::after {
+    opacity: 1;
+}
+
+/* Scroll-triggered animations */
+.scroll-fade {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-fade.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Enhanced chart container */
+.chart-container {
+    background: rgba(40, 40, 40, 0.5);
+    backdrop-filter: blur(8px);
+    border-radius: 15px;
+    padding: 1.5rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: chartFadeIn 0.8s ease-out forwards;
+}
+
+@keyframes chartFadeIn {
     from {
         opacity: 0;
+        transform: translateY(20px) scale(0.98);
         filter: blur(5px);
     }
     to {
         opacity: 1;
+        transform: translateY(0) scale(1);
         filter: blur(0);
     }
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-
-.fade-in {
-    animation: fadeIn 0.8s ease-out forwards;
-}
-
-.slide-in {
-    animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-/* Typing animation */
-.typed-text {
-    border-right: 3px solid #1DB954;
-    animation: blink 0.7s step-end infinite,
-               typing 3.5s steps(40, end);
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-@keyframes blink {
-    from, to { border-color: transparent }
-    50% { border-color: #1DB954 }
-}
-
-@keyframes typing {
-    from { width: 0 }
-    to { width: 100% }
-}
-
-/* Chart container with hover effects */
-.chart-container {
-    background: rgba(40, 40, 40, 0.5);
-    border-radius: 15px;
-    padding: 1rem;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
 .chart-container:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 32px rgba(29, 185, 84, 0.15);
+    transform: scale(1.02) translateY(-5px);
+    box-shadow: 0 12px 32px rgba(29, 185, 84, 0.15);
+    border-color: rgba(29, 185, 84, 0.2);
 }
 
-/* Headers with gradient */
-h1, h2, h3 {
-    background: linear-gradient(120deg, #FFFFFF, #1DB954);
+/* Advanced animations */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.floating {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Gradient text and buttons */
+.gradient-text {
+    background: linear-gradient(120deg, #1DB954, #1ed760);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 1.5rem;
+    font-weight: 700;
 }
 
-/* Progress bars and sliders */
-.stProgress > div > div {
-    background-color: #1DB954;
-    transition: all 0.4s ease;
+.gradient-button {
+    background: linear-gradient(45deg, #1DB954, #1ed760);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    border: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(29, 185, 84, 0.2);
 }
 
-/* Scrollbar styling */
+.gradient-button:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(29, 185, 84, 0.3);
+}
+
+/* Track list styling */
+.track-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: rgba(40, 40, 40, 0.5);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.track-item:hover {
+    transform: scale(1.02);
+    background: rgba(40, 40, 40, 0.8);
+}
+
+.track-number {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1DB954;
+    margin-right: 1rem;
+}
+
+.track-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    margin-right: 1rem;
+}
+
+.track-info {
+    flex-grow: 1;
+}
+
+.track-name {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.track-artist {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
