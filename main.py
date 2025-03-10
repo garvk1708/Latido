@@ -83,27 +83,13 @@ def display_album_item(album, index):
     ''', unsafe_allow_html=True)
 
 def main():
-    # Inject JavaScript for device detection
-    st.markdown('''
-    <script>
-        // Simple device detection
-        document.addEventListener('DOMContentLoaded', function() {
-            const isMobile = window.innerWidth < 768;
-            const data = {
-                mobile: isMobile
-            };
-            // Send to Streamlit
-            window.parent.postMessage({
-                type: "streamlit:setComponentValue",
-                value: data
-            }, "*");
-        });
-    </script>
-    ''', unsafe_allow_html=True)
-    
-    # Set device type in session state
+    # Set responsive layout based on viewport
     if 'mobile_view' not in st.session_state:
         st.session_state.mobile_view = False
+        
+    # Allow manual toggle for testing
+    mobile_view = st.sidebar.checkbox("Mobile View", value=False)
+    st.session_state.mobile_view = mobile_view
     
     create_hero_section()
 
