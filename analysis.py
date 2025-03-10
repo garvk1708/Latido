@@ -200,6 +200,92 @@ def analyze_music_patterns(audio_features_df):
             'complexity_score': 50
         }
 
+def analyze_taste_profile(audio_features_df, top_genres, top_artists):
+    """Generate detailed analysis of user's taste profile with specific comments."""
+    try:
+        # Analyze key characteristics
+        avg_danceability = audio_features_df['danceability'].mean()
+        avg_energy = audio_features_df['energy'].mean()
+        avg_valence = audio_features_df['valence'].mean()
+        avg_acousticness = audio_features_df['acousticness'].mean()
+        avg_instrumentalness = audio_features_df['instrumentalness'].mean()
+        
+        # Generate insights based on these values
+        insights = []
+        
+        # Danceability insights
+        if avg_danceability > 0.7:
+            insights.append("You gravitate toward rhythmic, danceable music that moves you physically.")
+        elif avg_danceability < 0.4:
+            insights.append("You prefer music with less emphasis on steady rhythm and more on artistic expression.")
+        
+        # Energy insights
+        if avg_energy > 0.7:
+            insights.append("High-energy, intense tracks dominate your listening habits.")
+        elif avg_energy < 0.4:
+            insights.append("You appreciate more mellow, relaxed musical experiences.")
+        
+        # Mood insights from valence
+        if avg_valence > 0.7:
+            insights.append("Your music choices reflect a positive, upbeat emotional preference.")
+        elif avg_valence < 0.4:
+            insights.append("Your playlist often explores deeper, sometimes melancholic emotional territories.")
+        
+        # Acoustic vs. electronic preferences
+        if avg_acousticness > 0.6:
+            insights.append("You have a strong preference for organic, acoustic sounds over electronic production.")
+        elif avg_acousticness < 0.3:
+            insights.append("Modern electronic production elements feature heavily in your favorite music.")
+        
+        # Vocals vs. instrumental
+        if avg_instrumentalness > 0.5:
+            insights.append("You appreciate instrumental compositions where melody speaks without lyrics.")
+        
+        # Genre insights
+        if top_genres and len(top_genres) > 0:
+            top_genre = top_genres[0][0] if isinstance(top_genres[0], tuple) else top_genres[0]
+            insights.append(f"Your passion for {top_genre} stands out in your listening patterns.")
+            
+            # Genre diversity
+            if len(top_genres) > 5:
+                insights.append("You're a musical explorer, enjoying diverse genres rather than staying in one lane.")
+        
+        # Artist loyalty
+        if top_artists and 'items' in top_artists and len(top_artists['items']) > 0:
+            artist_count = len(top_artists['items'])
+            if artist_count > 15:
+                insights.append("You enjoy discovering many different artists rather than focusing on a few favorites.")
+            elif artist_count < 8:
+                insights.append("You show strong loyalty to a core group of favorite artists.")
+        
+        # Overall listening personality
+        personality_traits = []
+        if avg_danceability > 0.6 and avg_energy > 0.6:
+            personality_traits.append("The Life of the Party")
+        if avg_valence < 0.4 and avg_energy < 0.5:
+            personality_traits.append("The Deep Thinker")
+        if avg_acousticness > 0.6:
+            personality_traits.append("The Traditionalist")
+        if avg_danceability > 0.6 and avg_valence > 0.6:
+            personality_traits.append("The Optimist")
+        if avg_instrumentalness > 0.5:
+            personality_traits.append("The Purist")
+            
+        # Default trait if none assigned
+        if not personality_traits:
+            personality_traits.append("The Balanced Listener")
+            
+        return {
+            'insights': insights,
+            'personality_traits': personality_traits
+        }
+    except Exception as e:
+        # Return default values if error occurs
+        return {
+            'insights': ["You have an eclectic taste spanning various moods and styles."],
+            'personality_traits': ["The Balanced Listener"]
+        }
+
 def cluster_tracks(audio_features_df):
     """Use K-means clustering to group tracks by audio features."""
     try:

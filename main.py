@@ -215,6 +215,9 @@ def main():
         primary_trait = top_traits[0] if top_traits else 'balanced'
         primary_description = music_personality[primary_trait]
         
+        # Get detailed taste analysis
+        taste_profile = analyze_taste_profile(audio_features_df, genres, top_artists)
+        
         # Additional AI insights
         listening_personality = f"Based on your {listening_trends['listening_sessions']} listening sessions, you enjoy {genres[0][0] if genres else 'diverse'} music most during {listening_trends['peak_hour']}:00."
         
@@ -243,6 +246,37 @@ def main():
             ''',
             unsafe_allow_html=True
         )
+        
+        # Display personalized insights about user's taste
+        if taste_profile and taste_profile['insights']:
+            st.markdown("<h3 class='section-header'>AI Insights About Your Music Taste</h3>", unsafe_allow_html=True)
+            
+            # Create a container for insights with a nicer style
+            st.markdown('''
+                <div class="insights-container">
+            ''', unsafe_allow_html=True)
+            
+            # Display each insight with a nice style
+            for insight in taste_profile['insights'][:5]:  # Limit to top 5 insights
+                st.markdown(f'''
+                    <div class="insight-card">
+                        <span class="insight-icon">💡</span>
+                        <p>{insight}</p>
+                    </div>
+                ''', unsafe_allow_html=True)
+            
+            # Display personality traits
+            if taste_profile['personality_traits']:
+                traits_text = ", ".join(taste_profile['personality_traits'])
+                st.markdown(f'''
+                    <div class="personality-traits">
+                        <p><strong>Your listening personas:</strong> {traits_text}</p>
+                    </div>
+                ''', unsafe_allow_html=True)
+            
+            st.markdown('''
+                </div>
+            ''', unsafe_allow_html=True)
 
         # Display visualizations
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
@@ -324,12 +358,13 @@ def main():
                 # Simulated recommendations
                 recommendations = get_simulated_data(time_range)['recommendations']
             else:
-                # Get real recommendations
+                # Get real recommendations with audio features for personalization
                 recommendations = get_recommendations(
                     sp, 
                     seed_tracks=seed_track_ids, 
                     seed_artists=seed_artist_ids,
-                    limit=10
+                    limit=10,
+                    audio_features_df=audio_features_df
                 )
             
             if recommendations and 'tracks' in recommendations:

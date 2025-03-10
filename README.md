@@ -1,16 +1,20 @@
 
 # Spotify Analytics Dashboard 🎵
 
-An AI-powered Spotify analytics dashboard that provides deep insights into your music listening habits using machine learning.
+An AI-powered Spotify analytics dashboard that provides deep insights into your music listening habits using machine learning and AI analysis.
+
+![Spotify Analytics](https://github.com/yourusername/spotify-analytics-dashboard/raw/main/preview.png)
 
 ## Features
-- View your top tracks, artists, and albums
-- Explore your listening trends with time-based filters (4 weeks, 6 months, all time)
-- Advanced mood analysis using ML clustering
-- Detailed music pattern recognition
-- Genre distribution analysis
-- Interactive visualizations
-- AI-generated music personality profile
+- **AI-Powered Analysis**: Get personalized insights about your music taste and listening patterns
+- **Music Personality Profile**: Discover your unique listening personas based on your music choices
+- **Smart Recommendations**: Receive tailored music suggestions that match your taste profile
+- **Time-Based Filters**: Explore your listening trends with filters for 4 weeks, 6 months, and all time
+- **Interactive Visualizations**: Visualize your music preferences with dynamic charts
+- **Top Content Showcase**: View your top tracks, artists, and albums in a clean, modern interface
+- **Mood Analysis**: Understand the emotional patterns in your music using ML clustering
+- **Genre Distribution**: See a breakdown of your favorite music genres
+- **Mobile Responsive**: Optimized for both desktop and mobile viewing
 
 ## Local Setup
 
@@ -36,7 +40,7 @@ SPOTIPY_CLIENT_SECRET=your_client_secret
 
 ### 4. Install Dependencies
 ```bash
-pip install streamlit spotipy pandas numpy scikit-learn plotly
+pip install streamlit spotipy pandas numpy scikit-learn plotly python-dotenv
 ```
 
 ### 5. Run Locally
@@ -62,9 +66,7 @@ git push origin main
 2. Log into [Vercel](https://vercel.com) and import your GitHub repository
 
 3. Configure the project:
-   - Build Command: Leave empty (uses vercel.json configuration)
-   - Output Directory: Leave empty
-   - Install Command: Leave empty (uses vercel.json configuration)
+   - The repository includes a `vercel.json` file that configures the build settings
 
 4. Add Environment Variables:
    - Add `SPOTIPY_CLIENT_ID` and `SPOTIPY_CLIENT_SECRET` with your Spotify API credentials
@@ -76,24 +78,34 @@ git push origin main
 
 ## Using the Dashboard
 
-- Switch between real data and simulated data using the "Use Demo Mode" toggle
+- Connect your Spotify account to see your personalized insights, or use "Demo Mode" to explore with simulated data
 - Filter your music insights by time range (4 weeks, 6 months, or all time)
+- Get AI-powered insights about your music taste and listening patterns
 - Explore your top tracks, artists, and albums
-- Discover your AI-generated music personality
+- Discover song recommendations tailored to your unique preferences
+- View your audio feature analysis through interactive visualizations
 
 ## Project Structure
-- `main.py`: Main application file
-- `analysis.py`: ML-based analysis functions
-- `spotify_client.py`: Spotify API integration
-- `visualizations.py`: Data visualization components
-- `simulation.py`: Demo data generation
-- `.streamlit/`: Streamlit configuration and styling
+- `main.py`: Main application and UI components
+- `analysis.py`: ML-based analysis and insight generation
+- `spotify_client.py`: Spotify API integration and data retrieval
+- `visualizations.py`: Interactive data visualization components
+- `simulation.py`: Demo data generation for testing
+- `.streamlit/`: Streamlit configuration and custom styling
 
 ## Dependencies
 - Python 3.11+
 - Streamlit
-- Spotipy
-- Pandas
-- NumPy
-- Scikit-learn
-- Plotly
+- Spotipy (Spotify API client)
+- Pandas & NumPy (Data processing)
+- Scikit-learn (Machine learning for insights)
+- Plotly (Interactive visualizations)
+- Python-dotenv (Environment management)
+
+## License
+MIT License
+
+## Acknowledgements
+- [Spotify Web API](https://developer.spotify.com/documentation/web-api/)
+- [Streamlit](https://streamlit.io/)
+- [Spotipy](https://spotipy.readthedocs.io/)

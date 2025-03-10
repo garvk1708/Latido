@@ -2,6 +2,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import streamlit as st
 import os
+import random
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -132,8 +133,8 @@ def get_top_albums(sp, time_range='medium_term', limit=10):
         st.error(f"Error fetching top albums: {str(e)}")
         return None
 
-def get_recommendations(sp, seed_tracks=None, seed_artists=None, limit=10):
-    """Get track recommendations based on seed tracks or artists."""
+def get_recommendations(sp, seed_tracks=None, seed_artists=None, limit=10, audio_features_df=None):
+    """Get personalized track recommendations based on user's listening patterns."""
     try:
         # Prepare seed parameters
         params = {'limit': limit}
@@ -144,6 +145,26 @@ def get_recommendations(sp, seed_tracks=None, seed_artists=None, limit=10):
         if seed_artists and (not seed_tracks or len(seed_tracks) < 5):
             max_artists = 5 - (len(seed_tracks) if seed_tracks else 0)
             params['seed_artists'] = seed_artists[:max_artists]
+        
+        # Add audio feature parameters if available for more personalized recommendations
+        if audio_features_df is not None:
+            # Calculate averages of key audio features
+            avg_danceability = audio_features_df['danceability'].mean()
+            avg_energy = audio_features_df['energy'].mean()
+            avg_valence = audio_features_df['valence'].mean()
+            avg_tempo = audio_features_df['tempo'].mean()
+            avg_acousticness = audio_features_df['acousticness'].mean()
+            
+            # Add target parameters based on user's preferences
+            # We add slight variations to discover new but still relevant music
+            params.update({
+                'target_danceability': min(1.0, avg_danceability * random.uniform(0.85, 1.15)),
+                'target_energy': min(1.0, avg_energy * random.uniform(0.85, 1.15)),
+                'target_valence': min(1.0, avg_valence * random.uniform(0.85, 1.15)),
+                'min_tempo': max(0, avg_tempo * 0.85),
+                'max_tempo': avg_tempo * 1.15,
+                'target_acousticness': min(1.0, avg_acousticness * random.uniform(0.85, 1.15))
+            })
             
         # Get recommendations
         recommendations = sp.recommendations(**params)
