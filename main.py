@@ -161,13 +161,13 @@ def main():
                 top_albums = data['top_albums']
                 recent_tracks = data['recent_tracks']
                 audio_features = data['audio_features']
-    else:
-        # Initialize Spotify client and get real data
-        try:
-            # Show a customized loading spinner
-            with st.spinner("🎵 Connecting to Spotify..."):
-                sp = create_spotify_client()
-                profile = get_user_profile(sp)
+        else:
+            # Initialize Spotify client and get real data
+            try:
+                # Show a customized loading spinner
+                with st.spinner("🎵 Connecting to Spotify..."):
+                    sp = create_spotify_client()
+                    profile = get_user_profile(sp)
 
             # Use a different spinner for analyzing music
             with st.spinner("🎼 Analyzing your musical heartbeat..."):
