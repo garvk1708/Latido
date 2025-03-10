@@ -86,22 +86,31 @@ def analyze_music_patterns(audio_features_df):
     }
 
 def get_genre_distribution(top_artists):
-    """Get enhanced distribution of genres with sub-genre analysis."""
-    main_genres = []
-    sub_genres = []
-
+    """Analyze genre distribution from top artists."""
+    # Extract all genres
+    all_genres = []
     for artist in top_artists['items']:
-        artist_genres = artist['genres']
-        if artist_genres:
-            # Separate main and sub-genres
-            main_genres.append(artist_genres[0])
-            sub_genres.extend(artist_genres[1:])
+        all_genres.extend(artist['genres'])
 
-    return {
-        'main_genres': Counter(main_genres).most_common(5),
-        'sub_genres': Counter(sub_genres).most_common(10),
-        'genre_diversity': len(set(main_genres + sub_genres))
-    }
+    # Count genre occurrences
+    genre_counts = {}
+    for genre in all_genres:
+        if genre in genre_counts:
+            genre_counts[genre] += 1
+        else:
+            genre_counts[genre] = 1
+
+    # Sort by count
+    sorted_genres = sorted(genre_counts.items(), key=lambda x: x[1], reverse=True)
+
+    # Return top 8 genres in format compatible with visualization
+    main_genres = []
+    for genre, count in sorted_genres[:8]:
+        main_genres.append(('Genre', genre, count))
+
+    # Return as a list for direct use in visualization
+    return [(genre, count) for genre, count in sorted_genres[:8]]
+
 
 def calculate_listening_trends(recent_tracks):
     """Calculate detailed listening trends and patterns."""
@@ -138,25 +147,3 @@ def cluster_tracks(audio_features_df):
     features = ['danceability', 'energy', 'valence']
     clusters = kmeans.fit_predict(audio_features_df[features])
     return clusters
-
-def get_genre_distribution(top_artists):
-    """Get distribution of genres from top artists."""
-    genres = []
-    for artist in top_artists['items']:
-        genres.extend(artist['genres'])
-    return Counter(genres).most_common(10)
-
-def calculate_listening_trends(recent_tracks):
-    """Calculate listening trends from recent tracks."""
-    df = pd.DataFrame([{
-        'played_at': pd.to_datetime(track['played_at']),
-        'track_name': track['track']['name']
-    } for track in recent_tracks['items']])
-    
-    df['hour'] = df['played_at'].dt.hour
-    hourly_distribution = df.groupby('hour').size()
-    
-    return {
-        'peak_hour': hourly_distribution.idxmax(),
-        'total_tracks': len(df)
-    }

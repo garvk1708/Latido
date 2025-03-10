@@ -16,7 +16,7 @@ def create_audio_features_radar(audio_features_df):
         fill='toself',
         fillcolor='rgba(29, 185, 84, 0.2)',
         line=dict(color='#1DB954', width=2),
-        name='Average Features'
+        name='Your Music'
     ))
 
     # Add dynamic range markers
@@ -43,10 +43,12 @@ def create_audio_features_radar(audio_features_df):
                 visible=True,
                 range=[0, 1],
                 showline=False,
-                gridcolor='rgba(255, 255, 255, 0.1)'
+                gridcolor='rgba(255, 255, 255, 0.1)',
+                tickfont=dict(size=10)
             ),
             angularaxis=dict(
-                gridcolor='rgba(255, 255, 255, 0.1)'
+                gridcolor='rgba(255, 255, 255, 0.1)',
+                tickfont=dict(size=12, color='rgba(255, 255, 255, 0.7)')
             ),
             bgcolor='rgba(0,0,0,0)'
         ),
@@ -57,12 +59,33 @@ def create_audio_features_radar(audio_features_df):
             color='white',
             size=12
         ),
-        margin=dict(l=80, r=80, t=40, b=40)
+        margin=dict(l=20, r=20, t=40, b=20),
+        height=350,  # Fixed height for better responsive display
+        autosize=True,
+        legend=dict(
+            orientation="h",
+            yanchor="top",
+            y=1.1,
+            xanchor="center",
+            x=0.5,
+            font=dict(size=12)
+        ),
+        hoverlabel=dict(
+            bgcolor="rgba(40, 40, 40, 0.8)",
+            font=dict(family="Montserrat", size=12, color="white")
+        )
     )
+    
+    # Add hover effects
+    fig.update_traces(
+        hovertemplate='<b>%{theta}</b>: %{r:.2f}<extra></extra>'
+    )
+    
     return fig
 
 def create_genre_bar_chart(genre_counts):
     """Create an enhanced bar chart for genre distribution."""
+    # Convert to dataframe, handling input as list of tuples (genre, count)
     df = pd.DataFrame(genre_counts, columns=['Genre', 'Count'])
 
     fig = px.bar(
@@ -87,20 +110,24 @@ def create_genre_bar_chart(genre_counts):
             gridcolor='rgba(255,255,255,0.1)',
             showgrid=True,
             zeroline=False,
-            showline=False
+            showline=False,
+            title_font=dict(size=14)
         ),
         yaxis=dict(
             gridcolor='rgba(255,255,255,0.1)',
             showgrid=False,
             zeroline=False,
-            showline=False
+            showline=False,
+            title_font=dict(size=14)
         ),
         coloraxis_showscale=False,
         margin=dict(l=20, r=20, t=40, b=20),
         hoverlabel=dict(
             bgcolor='rgba(40,40,40,0.8)',
             font=dict(family='Montserrat', size=12)
-        )
+        ),
+        height=350,  # Fixed height for better display on various devices
+        autosize=True
     )
 
     # Add hover effects

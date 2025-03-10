@@ -54,6 +54,28 @@ def display_track_item(track, index):
     ''', unsafe_allow_html=True)
 
 def main():
+    # Inject JavaScript for device detection
+    st.markdown('''
+    <script>
+        // Simple device detection
+        document.addEventListener('DOMContentLoaded', function() {
+            const isMobile = window.innerWidth < 768;
+            const data = {
+                mobile: isMobile
+            };
+            // Send to Streamlit
+            window.parent.postMessage({
+                type: "streamlit:setComponentValue",
+                value: data
+            }, "*");
+        });
+    </script>
+    ''', unsafe_allow_html=True)
+    
+    # Set device type in session state
+    if 'mobile_view' not in st.session_state:
+        st.session_state.mobile_view = False
+    
     create_hero_section()
 
     # Simulation mode toggle
@@ -122,7 +144,7 @@ def main():
         genres = get_genre_distribution(top_artists)
         listening_trends = calculate_listening_trends(recent_tracks)
 
-        # Display mood insights
+        # Display mood insights in a responsive layout
         st.markdown(
             f'''
             <div class="stat-card">
@@ -141,18 +163,22 @@ def main():
 
         # Display visualizations
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+        
+        # Use responsive columns based on screen size
+        use_container_width = True
         col1, col2 = st.columns(2)
 
         with col1:
             st.plotly_chart(
                 create_audio_features_radar(audio_features_df),
-                use_container_width=True
+                use_container_width=use_container_width
             )
 
         with col2:
+            # Fix the genre chart error - genres should be a list of tuples
             st.plotly_chart(
-                create_genre_bar_chart(genres['main_genres']),
-                use_container_width=True
+                create_genre_bar_chart(genres),
+                use_container_width=use_container_width
             )
 
         st.plotly_chart(
@@ -161,21 +187,35 @@ def main():
         )
         st.markdown('</div>', unsafe_allow_html=True)
 
-        # Display top tracks with album art
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown('<div class="scroll-fade">', unsafe_allow_html=True)
+        # Responsive layout for tracks and artists
+        # For larger screens use columns, for mobile stack vertically
+        if st.session_state.get("mobile_view", False):
+            # Mobile view - stacked layout
+            st.markdown('<div class="scroll-fade mobile-view">', unsafe_allow_html=True)
             st.subheader("🎵 Top Tracks")
             for i, track in enumerate(top_tracks['items'][:5], 1):
                 display_track_item(track, i)
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        with col2:
-            st.markdown('<div class="scroll-fade">', unsafe_allow_html=True)
+                
             st.subheader("👥 Top Artists")
             for i, artist in enumerate(top_artists['items'][:5], 1):
                 display_track_item(artist, i)
             st.markdown('</div>', unsafe_allow_html=True)
+        else:
+            # Desktop view - side by side
+            col1, col2 = st.columns(2)
+            with col1:
+                st.markdown('<div class="scroll-fade">', unsafe_allow_html=True)
+                st.subheader("🎵 Top Tracks")
+                for i, track in enumerate(top_tracks['items'][:5], 1):
+                    display_track_item(track, i)
+                st.markdown('</div>', unsafe_allow_html=True)
+
+            with col2:
+                st.markdown('<div class="scroll-fade">', unsafe_allow_html=True)
+                st.subheader("👥 Top Artists")
+                for i, artist in enumerate(top_artists['items'][:5], 1):
+                    display_track_item(artist, i)
+                st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
