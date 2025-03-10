@@ -1,7 +1,7 @@
 
-# Latido 💓 - El ritmo de tu corazón musical
+# Latido 💓 
 
-![Latido Logo](generated-icon.png)
+
 
 ## Overview
 Latido is an AI-powered web application that reveals the unique heartbeat of your musical tastes through advanced analysis and elegant visualizations. Discover insights about your Spotify listening habits and get personalized recommendations.
