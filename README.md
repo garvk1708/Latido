@@ -33,7 +33,7 @@ Don't want to connect your Spotify account? Use the Demo Mode to explore the das
 - **Filter by Time**: Filter your music insights by time range (4 weeks, 6 months, or all time)
 - **Explore Stats**: View your top tracks, artists, and albums
 - **Get Insights**: Discover AI-powered insights about your music taste
-- **Mobile View**: Toggle mobile view for optimized experience on smaller screens
+- **Responsive Design**: App automatically adapts to all screen sizes from mobile to desktop
 
 ## Project Structure
 - `main.py`: Main application and UI components
@@ -59,6 +59,22 @@ To modify this application:
 2. Modify `visualizations.py` to update or add new data visualizations
 3. Extend `analysis.py` to implement new data analysis methods
 4. Update `main.py` to change the UI layout and components
+
+## Deployment
+
+The app is set up for easy deployment:
+
+1. The app will run automatically on Replit
+2. For public sharing, click the "Run" button at the top of the page
+3. Share the provided URL with others
+
+## Troubleshooting
+
+Common issues and solutions:
+
+- **Authentication Errors**: Make sure your Spotify credentials are correctly set in the .env file
+- **Missing Data**: If charts or recommendations don't appear, try using Demo Mode to verify the app functionality
+- **Display Issues**: Clear your browser cache or try a different browser if visualizations don't render properly
 
 ## License
 MIT License

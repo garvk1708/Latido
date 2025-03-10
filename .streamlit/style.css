@@ -432,7 +432,7 @@ html, body, [class*="css"] {
     text-align: center;
 }
 
-/* Mobile-specific adjustments */
+/* Enhanced responsive design */
 @media screen and (max-width: 768px) {
     .hero-section h1 {
         font-size: 2.2rem !important;
@@ -458,20 +458,59 @@ html, body, [class*="css"] {
         min-height: 36px !important;
         min-width: 36px !important;
     }
+    
     .recommendation-card {
         margin-bottom: 10px;
     }
+    
     .insight-card {
         padding: 12px;
+    }
+    
+    /* Automatic column stacking for mobile */
+    .row-widget.stHorizontal > div {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        margin-bottom: 20px;
+    }
+    
+    /* Fix for track display on mobile */
+    .track-item {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* Make recommendations fit better */
+    [data-testid="column"] {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+    
+    /* Adjust heading sizes */
+    h1 {
+        font-size: 1.8rem !important;
+    }
+    
+    h2 {
+        font-size: 1.5rem !important;
+    }
+    
+    h3 {
+        font-size: 1.2rem !important;
     }
 }
 
 /* Tablet adjustments */
 @media screen and (min-width: 769px) and (max-width: 1024px) {
-    /* Adjust columns for better tablet experience */
+    /* Responsive column layout for tablets */
+    .row-widget.stHorizontal {
+        flex-wrap: wrap;
+    }
+    
     .row-widget.stHorizontal > div {
-        flex: 1 1 100% !important;
-        width: 100% !important;
+        flex: 1 1 50% !important;
+        min-width: 250px !important;
+        margin-bottom: 15px;
     }
 
     /* Stack charts on medium screens */
@@ -479,6 +518,11 @@ html, body, [class*="css"] {
         width: 100% !important;
         flex: 1 1 100% !important;
         margin-bottom: 15px;
+    }
+    
+    /* Better recommendation cards for tablets */
+    .recommendation-card {
+        min-width: 150px;
     }
 }
 

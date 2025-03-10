@@ -47,7 +47,7 @@ import os
 # Load custom CSS
 with open('.streamlit/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-    
+
 # Add custom logo styling
 from visualizations import add_logo_styling
 add_logo_styling()
@@ -111,7 +111,7 @@ def display_artist_item(artist, index):
             </div>
         </div>
     ''', unsafe_allow_html=True)
-    
+
 def display_album_item(album, index):
     """Display an album with cover art and hover effects."""
     st.markdown(f'''
@@ -128,30 +128,24 @@ def display_album_item(album, index):
 
 def main():
     # Initialize session state
-    if 'mobile_view' not in st.session_state:
-        st.session_state.mobile_view = False
-    
+    # Removed mobile_view from session state as it's no longer used
+
     # Always use dark theme for Latido
     st.markdown("""
         <style>
             [data-testid="stHeader"] {background-color: #121212;}
         </style>
     """, unsafe_allow_html=True)
-    
+
     create_hero_section()
-    
+
     # Create top navigation controls in a container
     with st.container():
         st.markdown('<div class="controls-container">', unsafe_allow_html=True)
-        col1, col2, col3 = st.columns([1, 2, 1])
-        
+        col1, col2 = st.columns([1,2]) #Removed col3 as mobile view is removed
+
         with col1:
-            # Mobile view toggle with styled button
-            mobile_view = st.checkbox("📱 Mobile View", value=st.session_state.mobile_view)
-            st.session_state.mobile_view = mobile_view
-        
-        with col2:
-            # Time range filter with styled dropdown
+            #Time range filter with styled dropdown
             time_range = st.selectbox(
                 "📅 Time Period",
                 options=[
@@ -162,17 +156,17 @@ def main():
                 format_func=lambda x: x[1],
                 index=1  # Default to medium_term
             )[0]
-        
-        with col3:
+
+        with col2:
             # Simulation mode toggle with styled button
             use_simulation = st.checkbox("✨ Demo Mode", value=True, 
                                         help="Try the dashboard with simulated data")
-        
+
         st.markdown('</div>', unsafe_allow_html=True)
-        
+
         # Add a separator line
         st.markdown('<hr class="separator">', unsafe_allow_html=True)
-    
+
     # Display loading animation
     with st.container():
         if use_simulation:
@@ -235,10 +229,10 @@ def main():
         music_patterns = analyze_music_patterns(audio_features_df)
         genres = get_genre_distribution(top_artists)
         listening_trends = calculate_listening_trends(recent_tracks)
-        
+
         # AI-powered track clusters
         track_clusters = cluster_tracks(audio_features_df)
-        
+
         # Define music personality types based on analysis
         personality_types = {
             'explorer': mood_analysis['mood_diversity_score'] > 70,
@@ -247,12 +241,12 @@ def main():
             'nostalgic': music_patterns['acoustic_electronic_ratio'] > 2.0,
             'rhythm_driven': music_patterns['tempo_patterns']['tempo_variation'] < 10
         }
-        
+
         # Determine top traits
         top_traits = [k for k, v in personality_types.items() if v]
         if not top_traits:
             top_traits = ['balanced']
-            
+
         music_personality = {
             'explorer': "Music Explorer: You seek diverse sounds and experiences.",
             'enthusiast': "Energy Enthusiast: You gravitate toward high-energy music.",
@@ -261,17 +255,17 @@ def main():
             'rhythm_driven': "Rhythm Driven: You connect with consistent beats and tempos.",
             'balanced': "Musical Omnivore: You have a balanced and diverse taste profile."
         }
-        
+
         # Extract primary and secondary traits
         primary_trait = top_traits[0] if top_traits else 'balanced'
         primary_description = music_personality[primary_trait]
-        
+
         # Get detailed taste analysis
         taste_profile = analyze_taste_profile(audio_features_df, genres, top_artists)
-        
+
         # Additional AI insights
         listening_personality = f"Based on your {listening_trends['listening_sessions']} listening sessions, you enjoy {genres[0][0] if genres else 'diverse'} music most during {listening_trends['peak_hour']}:00."
-        
+
         # Display enhanced AI insights in a responsive layout
         st.markdown(
             f'''
@@ -297,16 +291,16 @@ def main():
             ''',
             unsafe_allow_html=True
         )
-        
+
         # Display personalized insights about user's taste
         if taste_profile and taste_profile['insights']:
             st.markdown("<h3 class='section-header'>AI Insights About Your Music Taste</h3>", unsafe_allow_html=True)
-            
+
             # Create a container for insights with a nicer style
             st.markdown('''
                 <div class="insights-container">
             ''', unsafe_allow_html=True)
-            
+
             # Display each insight with a nice style
             for insight in taste_profile['insights'][:5]:  # Limit to top 5 insights
                 st.markdown(f'''
@@ -315,7 +309,7 @@ def main():
                         <p>{insight}</p>
                     </div>
                 ''', unsafe_allow_html=True)
-            
+
             # Display personality traits
             if taste_profile['personality_traits']:
                 traits_text = ", ".join(taste_profile['personality_traits'])
@@ -324,14 +318,14 @@ def main():
                         <p><strong>Your listening personas:</strong> {traits_text}</p>
                     </div>
                 ''', unsafe_allow_html=True)
-            
+
             st.markdown('''
                 </div>
             ''', unsafe_allow_html=True)
 
         # Display visualizations
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        
+
         # Use responsive columns based on screen size
         use_container_width = True
         col1, col2 = st.columns(2)
@@ -355,56 +349,40 @@ def main():
         )
         st.markdown('</div>', unsafe_allow_html=True)
 
-        # Responsive layout for tracks, artists, and albums
-        # For larger screens use columns, for mobile stack vertically
-        if st.session_state.get("mobile_view", False):
-            # Mobile view - stacked layout
-            st.markdown('<div class="scroll-fade mobile-view">', unsafe_allow_html=True)
+
+        # Removed mobile view conditional rendering as it's no longer needed.  All layouts should be responsive via CSS.
+
+        st.markdown("<h2 class='section-header'>Your Top Music</h2>", unsafe_allow_html=True)
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.markdown('<div class="scroll-fade">', unsafe_allow_html=True)
             st.subheader("🎵 Top Tracks")
             for i, track in enumerate(top_tracks['items'][:5], 1):
                 display_track_item(track, i)
-                
+            st.markdown('</div>', unsafe_allow_html=True)
+
+        with col2:
+            st.markdown('<div class="scroll-fade">', unsafe_allow_html=True)
             st.subheader("👥 Top Artists")
             for i, artist in enumerate(top_artists['items'][:5], 1):
                 display_artist_item(artist, i)
-                
+            st.markdown('</div>', unsafe_allow_html=True)
+
+        with col3:
+            st.markdown('<div class="scroll-fade">', unsafe_allow_html=True)
             st.subheader("💿 Top Albums")
             for i, album in enumerate(top_albums['items'][:5], 1):
                 display_album_item(album, i)
             st.markdown('</div>', unsafe_allow_html=True)
-        else:
-            # Desktop view - side by side
-            st.markdown("<h2 class='section-header'>Your Top Music</h2>", unsafe_allow_html=True)
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                st.markdown('<div class="scroll-fade">', unsafe_allow_html=True)
-                st.subheader("🎵 Top Tracks")
-                for i, track in enumerate(top_tracks['items'][:5], 1):
-                    display_track_item(track, i)
-                st.markdown('</div>', unsafe_allow_html=True)
 
-            with col2:
-                st.markdown('<div class="scroll-fade">', unsafe_allow_html=True)
-                st.subheader("👥 Top Artists")
-                for i, artist in enumerate(top_artists['items'][:5], 1):
-                    display_artist_item(artist, i)
-                st.markdown('</div>', unsafe_allow_html=True)
-                
-            with col3:
-                st.markdown('<div class="scroll-fade">', unsafe_allow_html=True)
-                st.subheader("💿 Top Albums")
-                for i, album in enumerate(top_albums['items'][:5], 1):
-                    display_album_item(album, i)
-                st.markdown('</div>', unsafe_allow_html=True)
-                
         # Song recommendations section
         st.markdown("<h2 class='section-header'>Recommended For You</h2>", unsafe_allow_html=True)
-        
+
         if top_tracks and top_artists:
             # Get seed data for recommendations
             seed_track_ids = [track['id'] for track in top_tracks['items'][:2]]
             seed_artist_ids = [artist['id'] for artist in top_artists['items'][:3]]
-            
+
             if use_simulation:
                 # Simulated recommendations
                 recommendations = get_simulated_data(time_range)['recommendations']
@@ -417,12 +395,12 @@ def main():
                     limit=10,
                     audio_features_df=audio_features_df
                 )
-            
+
             if recommendations and 'tracks' in recommendations:
-                # Display in a grid layout
-                columns = 5 if not st.session_state.mobile_view else 2
+                # Responsive grid layout based on screen size
+                columns = 5  # Default column count, CSS will handle responsive behavior
                 rows = (len(recommendations['tracks']) + columns - 1) // columns
-                
+
                 # Create grid
                 for row in range(rows):
                     cols = st.columns(columns)
