@@ -3,11 +3,12 @@ import time
 from spotify_client import (
     create_spotify_client, get_user_profile, get_top_tracks,
     get_top_artists, get_recent_tracks, get_audio_features,
-    get_top_albums
+    get_top_albums, get_recommendations
 )
 from analysis import (
     process_audio_features, analyze_mood, get_genre_distribution,
-    calculate_listening_trends, analyze_music_patterns, cluster_tracks
+    calculate_listening_trends, analyze_music_patterns, cluster_tracks,
+    analyze_taste_profile
 )
 from visualizations import (
     create_audio_features_radar, create_genre_bar_chart,

@@ -32,19 +32,12 @@ def create_spotify_client():
             # Get the auth URL
             auth_url = auth_manager.get_authorize_url()
 
-            # Display login page with styled button
+            # Display clean login page with styled button
             st.markdown(
                 f"""
                 <div style="text-align: center; padding: 2rem;">
                     <h2 style="color: #1DB954; margin-bottom: 1.5rem;">Welcome to Spotify Analytics!</h2>
                     <p style="margin-bottom: 2rem;">Connect your Spotify account to see your personalized music insights.</p>
-                    <p style="margin-bottom: 1rem; color: #888;">Before clicking connect:</p>
-                    <ol style="text-align: left; max-width: 600px; margin: 0 auto 2rem; color: #888;">
-                        <li>Go to your <a href="https://developer.spotify.com/dashboard" target="_blank">Spotify Developer Dashboard</a></li>
-                        <li>Select your app</li>
-                        <li>Add "http://localhost:5000" as a Redirect URI</li>
-                        <li>Save the changes</li>
-                    </ol>
                     <a href="{auth_url}" target="_self" 
                        style="background-color: #1DB954; 
                               color: white; 

@@ -4,6 +4,75 @@ import numpy as np
 from sklearn.cluster import KMeans
 from datetime import datetime
 import collections
+import random
+
+def analyze_taste_profile(audio_features_df, genres, top_artists):
+    """Generate personalized taste profile and insights based on audio features and genres."""
+    # Initialize result dictionary
+    profile = {
+        'insights': [],
+        'personality_traits': []
+    }
+    
+    # Skip if no data
+    if audio_features_df.empty or not genres:
+        return profile
+    
+    # Extract mean values for key features
+    mean_danceability = audio_features_df['danceability'].mean()
+    mean_energy = audio_features_df['energy'].mean()
+    mean_valence = audio_features_df['valence'].mean()
+    mean_tempo = audio_features_df['tempo'].mean()
+    mean_acousticness = audio_features_df['acousticness'].mean()
+    
+    # Generate insights based on audio features
+    # Danceability insights
+    if mean_danceability > 0.7:
+        profile['insights'].append("You gravitate toward rhythmic, danceable music that keeps you moving.")
+        profile['personality_traits'].append("Dance Enthusiast")
+    elif mean_danceability < 0.4:
+        profile['insights'].append("You prefer music with complex, less predictable rhythmic structures.")
+        profile['personality_traits'].append("Rhythm Explorer")
+    
+    # Energy insights
+    if mean_energy > 0.7:
+        profile['insights'].append("High-energy tracks dominate your playlist, suggesting you use music for motivation.")
+        profile['personality_traits'].append("Energy Seeker")
+    elif mean_energy < 0.4:
+        profile['insights'].append("You tend to enjoy more relaxed, calming music that creates atmosphere.")
+        profile['personality_traits'].append("Ambience Lover")
+    
+    # Mood (valence) insights
+    if mean_valence > 0.7:
+        profile['insights'].append("Your music choices reflect a preference for uplifting, positive sounds.")
+        profile['personality_traits'].append("Positivity Seeker")
+    elif mean_valence < 0.4:
+        profile['insights'].append("You're drawn to more melancholic, reflective, and emotionally complex music.")
+        profile['personality_traits'].append("Emotional Depth Explorer")
+    
+    # Tempo insights
+    if mean_tempo > 120:
+        profile['insights'].append("Fast-paced music features prominently in your listening habits.")
+    elif mean_tempo < 90:
+        profile['insights'].append("You tend to enjoy music with a more leisurely, relaxed pace.")
+    
+    # Acousticness insights
+    if mean_acousticness > 0.6:
+        profile['insights'].append("Acoustic elements and organic instruments resonate strongly with you.")
+        profile['personality_traits'].append("Acoustic Enthusiast")
+    elif mean_acousticness < 0.3:
+        profile['insights'].append("You prefer contemporary production with electronic and processed sounds.")
+        profile['personality_traits'].append("Production Enthusiast")
+    
+    # Genre insights
+    top_genres = [g[0] for g in genres[:3]] if genres else []
+    if top_genres:
+        profile['insights'].append(f"Your top genres ({', '.join(top_genres)}) reveal a taste for {random.choice(['diverse', 'distinctive', 'characteristic'])} musical styles.")
+    
+    # Shuffle insights to create variety
+    random.shuffle(profile['insights'])
+    
+    return profile
 
 def process_audio_features(audio_features):
     """Process the audio features data and convert to a DataFrame."""
