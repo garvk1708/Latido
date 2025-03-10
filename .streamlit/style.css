@@ -533,8 +533,10 @@ html, body, [class*="css"] {
 .logo-container {
     margin-bottom: 1rem;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 .logo-container svg {
@@ -542,7 +544,29 @@ html, body, [class*="css"] {
 }
 
 /* Ensure Latido text is visible */
-.logo-container div {
+.latido-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #FF3366;
+    margin-top: -30px;
     text-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
     letter-spacing: 1px;
+}
+
+/* Tagline styling */
+.tagline-container {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    text-align: center;
+}
+
+.tagline {
+    display: inline-block;
+    position: relative;
+    animation: taglineFloat 4s ease-in-out infinite;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }

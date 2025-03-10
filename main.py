@@ -17,13 +17,30 @@ from visualizations import (
 )
 from simulation import get_simulated_data
 
-# Page configuration
+# Set favicon
+favicon_path = "generated-icon.png"
+# If no favicon file exists, create one
+if not os.path.exists(favicon_path):
+    from PIL import Image, ImageDraw
+    # Create a heartbeat logo favicon
+    img = Image.new('RGBA', (64, 64), color=(18, 18, 18, 255))
+    draw = ImageDraw.Draw(img)
+    # Draw a heartbeat line
+    points = [(8, 32), (16, 32), (20, 16), (28, 48), (36, 24), (44, 32), (56, 32)]
+    draw.line(points, fill=(255, 51, 102, 255), width=3)
+    img.save(favicon_path, 'PNG')
+
 st.set_page_config(
     page_title="Latido - Musical Heart Rhythm",
-    page_icon="💓",
+    page_icon=favicon_path,
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+</new_str>
+
+
+# Import os for file operations
+import os
 
 # Load custom CSS
 with open('.streamlit/style.css') as f:
@@ -50,9 +67,12 @@ def create_hero_section():
     st.markdown(f'''
         <div class="hero-section">
             <div class="logo-container">
-                {latido_logo}
+                <svg width="120" height="48" viewBox="0 0 120 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20.5 8.5C17.5 11.5 6.5 28.5 5 30.5C3.5 32.5 4 38 9 38C14 38 18 33.5 20.5 30.5C23 27.5 26.5 22 28 20C29.5 18 35.5 10 40 10C44.5 10 44.5 13.5 43 17C41.5 20.5 38 25 36.5 27C35 29 31 34 29.5 35.5C28 37 23 42 23 42" stroke="#FF3366" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <div class="latido-text">LATIDO</div>
             </div>
-            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; font-weight: 400; text-align: center;">
+            <h2 class="tagline-container">
                 <span class="tagline">The rhythm of your musical heart</span>
             </h2>
         </div>
