@@ -24,6 +24,11 @@ html, body, [class*="css"] {
     padding: 1.5rem;
     border-radius: 10px;
     border: 1px solid #404040;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
 }
 
 .css-1d391kg {
@@ -34,4 +39,33 @@ div[data-testid="stMetricValue"] {
     font-size: 2rem;
     font-weight: 700;
     color: #1DB954;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.typed-text {
+    border-right: 2px solid #1DB954;
+    animation: blink 0.7s step-end infinite;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+@keyframes blink {
+    from, to { border-color: transparent }
+    50% { border-color: #1DB954 }
+}
+
+.chart-container {
+    transition: all 0.3s ease;
+}
+
+.chart-container:hover {
+    transform: scale(1.02);
 }
