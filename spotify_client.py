@@ -126,6 +126,11 @@ def get_top_albums(sp, time_range='medium_term', limit=10):
         st.error(f"Error fetching top albums: {str(e)}")
         return None
 
+import random
+import streamlit as st
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
+
 def get_recommendations(sp, seed_tracks=None, seed_artists=None, limit=10, audio_features_df=None):
     """Get personalized track recommendations based on user's listening patterns."""
     try:
@@ -164,4 +169,111 @@ def get_recommendations(sp, seed_tracks=None, seed_artists=None, limit=10, audio
         return recommendations
     except Exception as e:
         st.error(f"Error fetching recommendations: {str(e)}")
+        return None
+
+def create_spotify_client():
+    """Create and return a Spotify client."""
+    try:
+        # Initialize Spotify client with OAuth
+        sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
+            scope="user-top-read user-read-recently-played",
+            redirect_uri="http://localhost:8501",
+            show_dialog=True
+        ))
+        return sp
+    except Exception as e:
+        st.error(f"Failed to initialize Spotify client: {str(e)}")
+        return None
+
+def get_user_profile(sp):
+    """Get the user's Spotify profile."""
+    try:
+        return sp.current_user()
+    except Exception as e:
+        st.error(f"Error fetching user profile: {str(e)}")
+        return None
+
+def get_top_tracks(sp, time_range="medium_term"):
+    """Get the user's top tracks."""
+    try:
+        return sp.current_user_top_tracks(
+            limit=50,
+            time_range=time_range
+        )
+    except Exception as e:
+        st.error(f"Error fetching top tracks: {str(e)}")
+        return None
+
+def get_top_artists(sp, time_range="medium_term"):
+    """Get the user's top artists."""
+    try:
+        return sp.current_user_top_artists(
+            limit=50,
+            time_range=time_range
+        )
+    except Exception as e:
+        st.error(f"Error fetching top artists: {str(e)}")
+        return None
+
+def get_top_albums(sp, time_range="medium_term"):
+    """Extract top albums from top tracks."""
+    try:
+        # Get top tracks first
+        top_tracks = get_top_tracks(sp, time_range)
+        if not top_tracks:
+            return None
+            
+        # Extract album info from tracks
+        albums = {}
+        for track in top_tracks['items']:
+            album = track['album']
+            album_id = album['id']
+            
+            # Count album occurrences
+            if album_id in albums:
+                albums[album_id]['count'] += 1
+            else:
+                albums[album_id] = {
+                    'album': album,
+                    'count': 1
+                }
+        
+        # Sort by count
+        sorted_albums = sorted(albums.values(), key=lambda x: x['count'], reverse=True)
+        
+        # Format the response like a Spotify API response
+        return {
+            'items': [album['album'] for album in sorted_albums[:20]]
+        }
+    except Exception as e:
+        st.error(f"Error processing top albums: {str(e)}")
+        return None
+
+def get_recent_tracks(sp):
+    """Get the user's recently played tracks."""
+    try:
+        return sp.current_user_recently_played(limit=50)
+    except Exception as e:
+        st.error(f"Error fetching recent tracks: {str(e)}")
+        return None
+
+def get_audio_features(sp, track_ids):
+    """Get audio features for a list of tracks."""
+    try:
+        if not track_ids:
+            return None
+            
+        # Spotify API only allows 100 tracks per request
+        audio_features = []
+        
+        # Process in batches of 100
+        for i in range(0, len(track_ids), 100):
+            batch = track_ids[i:i+100]
+            batch_features = sp.audio_features(batch)
+            if batch_features:
+                audio_features.extend(batch_features)
+        
+        return audio_features
+    except Exception as e:
+        st.error(f"Error fetching audio features: {str(e)}")
         return None

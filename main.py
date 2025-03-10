@@ -17,6 +17,9 @@ from visualizations import (
 )
 from simulation import get_simulated_data
 
+# Import os for file operations
+import os
+
 # Set favicon
 favicon_path = "generated-icon.png"
 # If no favicon file exists, create one
@@ -36,7 +39,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
-</new_str>
 
 
 # Import os for file operations

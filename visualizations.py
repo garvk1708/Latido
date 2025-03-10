@@ -108,6 +108,111 @@ def create_genre_bar_chart(genres):
         )
         return fig
 
+import pandas as pd
+import numpy as np
+import plotly.express as px
+from datetime import datetime
+import random
+
+def create_audio_features_radar(audio_features_df):
+    """Create a radar chart of audio features."""
+    # Extract mean values for key features
+    mean_values = audio_features_df[['danceability', 'energy', 'valence', 
+                                     'acousticness', 'instrumentalness']].mean()
+    
+    # Create radar chart data
+    categories = ['Danceability', 'Energy', 'Positivity', 'Acousticness', 'Instrumentalness']
+    values = mean_values.values.tolist()
+    
+    # Create figure
+    fig = px.line_polar(
+        r=values,
+        theta=categories,
+        line_close=True,
+        range_r=[0, 1],
+        template="plotly_dark"
+    )
+    
+    # Update layout and styling
+    fig.update_traces(
+        fill='toself',
+        fillcolor='rgba(255, 51, 102, 0.2)',
+        line=dict(color='rgba(255, 51, 102, 0.8)', width=2)
+    )
+    
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 1],
+                tickfont=dict(size=10),
+                tickvals=[0.2, 0.4, 0.6, 0.8]
+            ),
+            angularaxis=dict(
+                tickfont=dict(size=12),
+                rotation=90,
+                direction="clockwise"
+            )
+        ),
+        paper_bgcolor='rgba(0, 0, 0, 0)',
+        plot_bgcolor='rgba(0, 0, 0, 0)',
+        title="Your Musical DNA",
+        title_font=dict(size=20),
+        title_x=0.5,
+        showlegend=False,
+        margin=dict(l=80, r=80, t=100, b=80)
+    )
+    
+    return fig
+
+def create_genre_bar_chart(genres):
+    """Create a bar chart of top genres."""
+    # Handle empty data
+    if not genres:
+        genres = [("No genre data", 0)]
+    
+    # Limit to top 8 genres
+    genres = genres[:8]
+    
+    # Create dataframe
+    df = pd.DataFrame({
+        'genre': [genre[0] for genre in genres],
+        'count': [genre[1] for genre in genres]
+    })
+    
+    # Sort by count
+    df = df.sort_values('count', ascending=True)
+    
+    # Create bar chart
+    fig = px.bar(
+        df,
+        y='genre',
+        x='count',
+        orientation='h',
+        template="plotly_dark"
+    )
+    
+    # Update layout and styling
+    fig.update_traces(
+        marker_color='rgba(255, 51, 102, 0.7)',
+        hovertemplate='<b>%{y}</b><br>Count: %{x}<extra></extra>'
+    )
+    
+    fig.update_layout(
+        paper_bgcolor='rgba(0, 0, 0, 0)',
+        plot_bgcolor='rgba(0, 0, 0, 0)',
+        title="Your Top Genres",
+        title_font=dict(size=20),
+        title_x=0.5,
+        xaxis_title=None,
+        yaxis_title=None,
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=False),
+        margin=dict(l=20, r=20, t=60, b=40)
+    )
+    
+    return fig
+
 def create_listening_time_chart(recent_tracks):
     """Create a chart showing listening patterns by hour of day."""
     try:
@@ -146,6 +251,56 @@ def create_listening_time_chart(recent_tracks):
         fig = px.line(
             df,
             x='hour',
+            y='count',
+            markers=True,
+            template="plotly_dark"
+        )
+        
+        # Update layout and styling
+        fig.update_traces(
+            line=dict(color='rgba(255, 51, 102, 0.8)', width=3),
+            marker=dict(size=8, color='rgba(255, 204, 0, 0.8)'),
+            hovertemplate='<b>%{customdata}</b><br>Tracks: %{y}<extra></extra>'
+        )
+        
+        fig.update_traces(customdata=df['time_label'])
+        
+        fig.update_layout(
+            paper_bgcolor='rgba(0, 0, 0, 0)',
+            plot_bgcolor='rgba(0, 0, 0, 0)',
+            title="When You Listen",
+            title_font=dict(size=20),
+            title_x=0.5,
+            xaxis_title=None,
+            yaxis_title="Tracks played",
+            xaxis=dict(
+                showgrid=False,
+                tickmode='array',
+                tickvals=list(range(0, 24, 3)),
+                ticktext=[time_labels[h] for h in range(0, 24, 3)]
+            ),
+            yaxis=dict(showgrid=False),
+            margin=dict(l=20, r=20, t=60, b=40)
+        )
+        
+        # Add a subtle area fill under the line
+        fig.add_scatter(
+            x=df['hour'],
+            y=df['count'],
+            mode='none',
+            fill='tozeroy',
+            fillcolor='rgba(255, 51, 102, 0.1)',
+            showlegend=False
+        )
+        
+        return fig
+    except Exception as e:
+        # Return a simple placeholder chart if there's an error
+        hours = list(range(24))
+        counts = np.random.randint(1, 5, size=24)
+        fig = px.line(x=hours, y=counts, template="plotly_dark")
+        fig.update_layout(title="Listening Patterns (Demo)")
+        return fig
             y='count',
             markers=True,
             line_shape='spline',
