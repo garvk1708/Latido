@@ -169,22 +169,22 @@ def main():
                     sp = create_spotify_client()
                     profile = get_user_profile(sp)
 
-            # Use a different spinner for analyzing music
-            with st.spinner("🎼 Analyzing your musical heartbeat..."):
-                top_tracks = get_top_tracks(sp, time_range)
-                top_artists = get_top_artists(sp, time_range)
-                top_albums = get_top_albums(sp, time_range)
-                recent_tracks = get_recent_tracks(sp)
+                # Use a different spinner for analyzing music
+                with st.spinner("🎼 Analyzing your musical heartbeat..."):
+                    top_tracks = get_top_tracks(sp, time_range)
+                    top_artists = get_top_artists(sp, time_range)
+                    top_albums = get_top_albums(sp, time_range)
+                    recent_tracks = get_recent_tracks(sp)
 
-                if all([top_tracks, top_artists, recent_tracks]):
-                    track_ids = [track['id'] for track in top_tracks['items']]
-                    audio_features = get_audio_features(sp, track_ids)
-                else:
-                    st.error("Failed to fetch your music data.")
-                    st.stop()
-        except Exception as e:
-            st.error(f"Authentication failed: {str(e)}")
-            st.stop()
+                    if all([top_tracks, top_artists, recent_tracks]):
+                        track_ids = [track['id'] for track in top_tracks['items']]
+                        audio_features = get_audio_features(sp, track_ids)
+                    else:
+                        st.error("Failed to fetch your music data.")
+                        st.stop()
+            except Exception as e:
+                st.error(f"Authentication failed: {str(e)}")
+                st.stop()
 
     # Process and display data
     if profile and audio_features:
