@@ -126,10 +126,15 @@ def display_album_item(album, index):
         </div>
     ''', unsafe_allow_html=True)
 
-def main():
-    # Initialize session state
-    # Removed mobile_view from session state as it's no longer used
+def init_session_state():
+    if "user_data" not in st.session_state:
+        st.session_state.user_data = {}
+    # Other initializations...
 
+def main():
+    # Initialize session state first
+    init_session_state()
+    
     # Always use dark theme for Latido
     st.markdown("""
         <style>
@@ -222,10 +227,9 @@ def main():
         # User profile section
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.image(
-                profile['images'][0]['url'],
-                width=150,
-                use_container_width=True
+            st.markdown(
+                f'<div style="display: flex; justify-content: center;"><img src="{profile["images"][0]["url"]}" width="150px"></div>',
+                unsafe_allow_html=True
             )
             st.markdown(
                 f'<h2 class="gradient-text" style="text-align: center;">Welcome, {profile["display_name"]}!</h2>',
