@@ -3,6 +3,15 @@ from spotipy.oauth2 import SpotifyOAuth
 import streamlit as st
 import os
 
+def get_redirect_uri():
+    """Get the appropriate redirect URI based on the environment."""
+    is_production = os.environ.get('VERCEL_ENV') == 'production'
+    if is_production:
+        # Use the Vercel deployment URL
+        vercel_url = os.environ.get('VERCEL_URL')
+        return f"https://{vercel_url}"
+    return "http://localhost:5000"
+
 def create_spotify_client():
     """Create and return an authenticated Spotify client."""
     # Cache the token info in Streamlit's session state
@@ -10,24 +19,32 @@ def create_spotify_client():
         st.session_state.spotify_token_info = None
 
     try:
+        redirect_uri = get_redirect_uri()
         oauth_manager = SpotifyOAuth(
             client_id=os.getenv("SPOTIPY_CLIENT_ID"),
             client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
-            redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI", "http://localhost:5000"),
+            redirect_uri=redirect_uri,
             scope="user-top-read user-read-recently-played user-library-read",
             cache_handler=None  # Disable file caching
-            )
+        )
 
         if st.session_state.spotify_token_info is None:
             auth_url = oauth_manager.get_authorize_url()
-            st.markdown(f"""
-                ### Welcome to Spotify Analytics!
-                Please authenticate with Spotify to continue.
-
-                <a href="{auth_url}" target="_self" class="button-primary">
-                    Login with Spotify
-                </a>
-                """, unsafe_allow_html=True)
+            st.markdown(
+                f"""
+                <div class="fade-in">
+                    <h3>Welcome to Spotify Analytics!</h3>
+                    <p>Please authenticate with Spotify to continue.</p>
+                    <a href="{auth_url}" target="_self" 
+                       style="background-color: #1DB954; color: white; padding: 10px 20px; 
+                              border-radius: 20px; text-decoration: none; display: inline-block;
+                              margin-top: 10px; font-weight: bold;">
+                        Login with Spotify
+                    </a>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
             st.stop()
 
         sp = spotipy.Spotify(auth_manager=oauth_manager)

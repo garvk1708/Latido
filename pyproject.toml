@@ -10,4 +10,5 @@ dependencies = [
     "scikit-learn>=1.6.1",
     "spotipy>=2.25.1",
     "streamlit>=1.43.1",
+    "twilio>=9.4.6",
 ]
