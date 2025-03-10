@@ -2,22 +2,14 @@
 
 /* Theme variables */
 :root {
-    --primary-color: #1DB954;
-    --secondary-color: #4169E1;
-    --background-color: #ffffff;
-    --card-background: #f8f9fa;
-    --text-color: #333333;
-    --text-secondary: #888888;
+    --primary-color: #FF3366; /* Vibrant Pink/Red */
+    --secondary-color: #FFCC00; /* Gold */
+    --background-color: #121212; /* Dark Background */
+    --card-background: #282828; /* Darker Card Background */
+    --text-color: #f0f0f0; /* Light Text */
+    --text-secondary: #b3b3b3; /* Lighter Text */
 }
 
-[data-theme="dark"] {
-    --primary-color: #1ED760;
-    --secondary-color: #4169E1;
-    --background-color: #121212;
-    --card-background: #1e1e1e;
-    --text-color: #ffffff;
-    --text-secondary: #b3b3b3;
-}
 
 body {
     background-color: var(--background-color);
@@ -32,7 +24,7 @@ html, body, [class*="css"] {
 
 /* Hero section with glassmorphism */
 .hero-section {
-    background: linear-gradient(135deg, rgba(29, 185, 84, 0.1) 0%, rgba(18, 18, 18, 0.95) 100%);
+    background: linear-gradient(135deg, rgba(255, 51, 102, 0.1) 0%, rgba(18, 18, 18, 0.95) 100%);
     backdrop-filter: blur(10px);
     padding: 3rem 2rem;
     border-radius: 20px;
@@ -77,8 +69,8 @@ html, body, [class*="css"] {
 
 .stat-card:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 12px 40px 0 rgba(29, 185, 84, 0.15);
-    border-color: rgba(29, 185, 84, 0.3);
+    box-shadow: 0 12px 40px 0 rgba(255, 51, 102, 0.15);
+    border-color: rgba(255, 51, 102, 0.3);
 }
 
 @keyframes cardSlideIn {
@@ -102,7 +94,7 @@ html, body, [class*="css"] {
 
 .album-art:hover {
     transform: scale(1.05);
-    box-shadow: 0 8px 24px rgba(29, 185, 84, 0.2);
+    box-shadow: 0 8px 24px rgba(255, 51, 102, 0.2);
 }
 
 .album-art::after {
@@ -164,8 +156,8 @@ html, body, [class*="css"] {
 
 .chart-container:hover {
     transform: scale(1.02) translateY(-5px);
-    box-shadow: 0 12px 32px rgba(29, 185, 84, 0.15);
-    border-color: rgba(29, 185, 84, 0.2);
+    box-shadow: 0 12px 32px rgba(255, 51, 102, 0.15);
+    border-color: rgba(255, 51, 102, 0.2);
 }
 
 /* Advanced animations */
@@ -197,12 +189,12 @@ html, body, [class*="css"] {
     transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
-    box-shadow: 0 4px 15px rgba(29, 185, 84, 0.2);
+    box-shadow: 0 4px 15px rgba(255, 51, 102, 0.2);
 }
 
 .gradient-button:hover {
     transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 6px 20px rgba(29, 185, 84, 0.3);
+    box-shadow: 0 6px 20px rgba(255, 51, 102, 0.3);
 }
 
 /* Track list styling */
@@ -267,7 +259,7 @@ html, body, [class*="css"] {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #1ed760;
+    background: #FF3366; /* Darker Pink/Red */
 }
 
 /* Section headers */
@@ -275,66 +267,68 @@ html, body, [class*="css"] {
     font-size: 1.8rem;
     margin-bottom: 1rem;
     text-align: center;
-    background: linear-gradient(90deg, var(--primary-color), #4CAF50);
+    background: linear-gradient(90deg, var(--primary-color), #FF3366); /* More intense gradient */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     padding: 10px 0;
 }
 
 
-/* Recommendation cards */
+/* Recommendation cards with Latido style */
 .recommendation-card {
-    background-color: var(--card-background);
+    background-color: rgba(40, 40, 40, 0.6);
     border-radius: 10px;
-    padding: 10px;
+    padding: 12px;
     margin-bottom: 15px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border-bottom: 2px solid var(--primary-color);
+    position: relative;
+    overflow: hidden;
 }
 
 .recommendation-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 8px 20px rgba(255, 51, 102, 0.2);
 }
 
-/* Theme toggle button */
-.theme-toggle {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    z-index: 1000;
-    background-color: var(--card-background);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+.recommendation-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30%;
+    background: linear-gradient(to top, rgba(255, 51, 102, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-/* Insight cards */
+.recommendation-card:hover::before {
+    opacity: 1;
+}
+
+/* Insight cards with Spanish inspiration */
 .insights-container {
     margin: 20px 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
 .insight-card {
-    background: linear-gradient(135deg, rgba(29, 185, 84, 0.1) 0%, rgba(30, 215, 96, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(255, 51, 102, 0.08) 0%, rgba(255, 204, 0, 0.05) 100%);
     border-radius: 10px;
     padding: 15px;
     display: flex;
     align-items: flex-start;
     transition: all 0.3s ease;
-    border-left: 3px solid #1DB954;
+    border-left: 3px solid var(--primary-color);
 }
 
 .insight-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transform: translateX(3px);
+    box-shadow: 0 5px 15px rgba(255, 51, 102, 0.1);
 }
 
 .insight-icon {
@@ -346,7 +340,7 @@ html, body, [class*="css"] {
 .personality-traits {
     margin-top: 15px;
     padding: 10px 15px;
-    background-color: rgba(29, 185, 84, 0.08);
+    background-color: rgba(255, 51, 102, 0.08);
     border-radius: 10px;
     text-align: center;
 }

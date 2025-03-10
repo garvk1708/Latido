@@ -1,27 +1,27 @@
-# Spotify Analytics Dashboard 🎵
+# Latido 💓 - El ritmo de tu corazón musical
 
-An AI-powered Spotify analytics dashboard that provides deep insights into your music listening habits using machine learning and AI analysis.
+Una aplicación impulsada por IA que revela el latido único de tus gustos musicales a través de análisis avanzados y visualizaciones elegantes.
 
-## Features
-- **AI-Powered Analysis**: Get personalized insights about your music taste and listening patterns
-- **Music Personality Profile**: Discover your unique listening personas based on your music choices
-- **Smart Recommendations**: Receive tailored music suggestions that match your taste profile
-- **Time-Based Filters**: Explore your listening trends with filters for 4 weeks, 6 months, and all time
-- **Interactive Visualizations**: Visualize your music preferences with dynamic charts
-- **Top Content Showcase**: View your top tracks, artists, and albums in a clean, modern interface
-- **Mood Analysis**: Understand the emotional patterns in your music using ML clustering
-- **Genre Distribution**: See a breakdown of your favorite music genres
-- **Mobile Responsive**: Optimized for both desktop and mobile viewing
+## Características
+- **Análisis con IA**: Obtén información personalizada sobre tus gustos musicales y patrones de escucha
+- **Perfil Musical Único**: Descubre tu personalidad musical basada en tus elecciones de canciones
+- **Recomendaciones Inteligentes**: Recibe sugerencias musicales adaptadas a tu perfil de gustos
+- **Filtros Temporales**: Explora tus tendencias con filtros para 4 semanas, 6 meses y todo el tiempo
+- **Visualizaciones Interactivas**: Visualiza tus preferencias musicales con gráficos dinámicos
+- **Contenido Destacado**: Ve tus canciones, artistas y álbumes favoritos en una interfaz elegante
+- **Análisis de Estado de Ánimo**: Comprende los patrones emocionales en tu música
+- **Distribución de Géneros**: Observa un desglose de tus géneros musicales favoritos
+- **Diseño Responsivo**: Optimizado tanto para escritorio como para dispositivos móviles
 
-## Demo Mode
+## Modo Demo
 
-Don't want to connect your Spotify account? Use the Demo Mode to explore the dashboard with simulated data!
+¿No quieres conectar tu cuenta de Spotify? ¡Usa el Modo Demo para explorar el panel con datos simulados!
 
-## Quick Start
+## Inicio Rápido
 
-1. The app is already configured to run immediately
-2. Click the Run button at the top of the page
-3. Optional: Connect your Spotify account or use Demo Mode
+1. La aplicación ya está configurada para ejecutarse inmediatamente
+2. Haz clic en el botón Ejecutar en la parte superior de la página
+3. Opcional: Conecta tu cuenta de Spotify o usa el Modo Demoode
 
 ## Using the Dashboard
 

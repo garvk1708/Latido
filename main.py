@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+import base64
 from spotify_client import (
     create_spotify_client, get_user_profile, get_top_tracks,
     get_top_artists, get_recent_tracks, get_audio_features,
@@ -18,26 +19,40 @@ from simulation import get_simulated_data
 
 # Page configuration
 st.set_page_config(
-    page_title="Spotify Analytics Dashboard",
-    page_icon="🎵",
+    page_title="Latido - Ritmo del Corazón",
+    page_icon="💓",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # Load custom CSS
 with open('.streamlit/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
+# Inline SVG logo for Latido
+latido_logo = '''
+<svg width="120" height="48" viewBox="0 0 120 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M20.5 8.5C17.5 11.5 6.5 28.5 5 30.5C3.5 32.5 4 38 9 38C14 38 18 33.5 20.5 30.5C23 27.5 26.5 22 28 20C29.5 18 35.5 10 40 10C44.5 10 44.5 13.5 43 17C41.5 20.5 38 25 36.5 27C35 29 31 34 29.5 35.5C28 37 23 42 23 42" stroke="#FF3366" stroke-width="3" stroke-linecap="round"/>
+  <text x="50" y="30" font-family="Arial" font-size="22" font-weight="700" fill="#FF3366">LATIDO</text>
+</svg>
+'''
+
+def get_base64_of_bin_file(bin_file):
+    """Get base64 encoding of binary file"""
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
 def create_hero_section():
-    """Create an animated hero section."""
-    st.markdown('''
+    """Create an animated hero section with Latido branding."""
+    st.markdown(f'''
         <div class="hero-section">
-            <h1 style="font-size: 3.5rem; margin-bottom: 1.5rem;">
-                <span class="gradient-text">Spotify Analytics</span>
-            </h1>
-            <p style="font-size: 1.2rem; margin-bottom: 2rem; color: #888;">
-                Discover your music personality through AI-powered insights
-            </p>
+            <div class="logo-container">
+                {latido_logo}
+            </div>
+            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; font-weight: 400;">
+                <span class="tagline">El ritmo de tu corazón musical</span>
+            </h2>
         </div>
     ''', unsafe_allow_html=True)
 
@@ -88,48 +103,47 @@ def main():
     if 'mobile_view' not in st.session_state:
         st.session_state.mobile_view = False
     
-    if 'theme' not in st.session_state:
-        st.session_state.theme = "light"
-        
-    # Sidebar configuration
-    st.sidebar.title("Settings")
-    
-    # Theme toggle
-    theme_options = ["Light", "Dark"]
-    selected_theme = st.sidebar.radio("🎨 Theme", theme_options, 
-                                      index=0 if st.session_state.theme == "light" else 1)
-    st.session_state.theme = "light" if selected_theme == "Light" else "dark"
-    
-    # Apply theme
-    if st.session_state.theme == "dark":
-        st.markdown("""
-            <style>
-                [data-testid="stSidebar"] {background-color: #1e1e1e;}
-                [data-testid="stHeader"] {background-color: #121212;}
-            </style>
-        """, unsafe_allow_html=True)
-    
-    # Mobile view toggle
-    mobile_view = st.sidebar.checkbox("📱 Mobile View", value=st.session_state.mobile_view)
-    st.session_state.mobile_view = mobile_view
+    # Always use dark theme for Latido
+    st.markdown("""
+        <style>
+            [data-testid="stHeader"] {background-color: #121212;}
+        </style>
+    """, unsafe_allow_html=True)
     
     create_hero_section()
-
-    # Simulation mode toggle
-    use_simulation = st.sidebar.checkbox("Use Demo Mode", value=True, 
-                                       help="Try the dashboard with simulated data")
-
-    # Time range filter
-    time_range = st.sidebar.selectbox(
-        "📅 Select time range",
-        options=[
-            ("short_term", "Last 4 weeks"),
-            ("medium_term", "Last 6 months"),
-            ("long_term", "All time")
-        ],
-        format_func=lambda x: x[1],
-        index=1  # Default to medium_term
-    )[0]
+    
+    # Create top navigation controls in a container
+    with st.container():
+        st.markdown('<div class="controls-container">', unsafe_allow_html=True)
+        col1, col2, col3 = st.columns([1, 2, 1])
+        
+        with col1:
+            # Mobile view toggle with styled button
+            mobile_view = st.checkbox("📱 Vista Móvil", value=st.session_state.mobile_view)
+            st.session_state.mobile_view = mobile_view
+        
+        with col2:
+            # Time range filter with styled dropdown
+            time_range = st.selectbox(
+                "📅 Periodo de tiempo",
+                options=[
+                    ("short_term", "Últimas 4 semanas"),
+                    ("medium_term", "Últimos 6 meses"),
+                    ("long_term", "Todo el tiempo")
+                ],
+                format_func=lambda x: x[1],
+                index=1  # Default to medium_term
+            )[0]
+        
+        with col3:
+            # Simulation mode toggle with styled button
+            use_simulation = st.checkbox("✨ Modo Demo", value=True, 
+                                        help="Prueba el dashboard con datos simulados")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Add a separator line
+        st.markdown('<hr class="separator">', unsafe_allow_html=True)
     
     if use_simulation:
         # Use simulated data
