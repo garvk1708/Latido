@@ -108,7 +108,7 @@ def main():
             st.image(
                 profile['images'][0]['url'],
                 width=150,
-                use_column_width=False
+                use_container_width=True
             )
             st.markdown(
                 f'<h2 class="gradient-text" style="text-align: center;">Welcome, {profile["display_name"]}!</h2>',
