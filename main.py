@@ -83,12 +83,33 @@ def display_album_item(album, index):
     ''', unsafe_allow_html=True)
 
 def main():
-    # Set responsive layout based on viewport
+    # Initialize session state
     if 'mobile_view' not in st.session_state:
         st.session_state.mobile_view = False
+    
+    if 'theme' not in st.session_state:
+        st.session_state.theme = "light"
         
-    # Allow manual toggle for testing
-    mobile_view = st.sidebar.checkbox("Mobile View", value=False)
+    # Sidebar configuration
+    st.sidebar.title("Settings")
+    
+    # Theme toggle
+    theme_options = ["Light", "Dark"]
+    selected_theme = st.sidebar.radio("🎨 Theme", theme_options, 
+                                      index=0 if st.session_state.theme == "light" else 1)
+    st.session_state.theme = "light" if selected_theme == "Light" else "dark"
+    
+    # Apply theme
+    if st.session_state.theme == "dark":
+        st.markdown("""
+            <style>
+                [data-testid="stSidebar"] {background-color: #1e1e1e;}
+                [data-testid="stHeader"] {background-color: #121212;}
+            </style>
+        """, unsafe_allow_html=True)
+    
+    # Mobile view toggle
+    mobile_view = st.sidebar.checkbox("📱 Mobile View", value=st.session_state.mobile_view)
     st.session_state.mobile_view = mobile_view
     
     create_hero_section()
@@ -290,6 +311,54 @@ def main():
                 for i, album in enumerate(top_albums['items'][:5], 1):
                     display_album_item(album, i)
                 st.markdown('</div>', unsafe_allow_html=True)
+                
+        # Song recommendations section
+        st.markdown("<h2 class='section-header'>Recommended For You</h2>", unsafe_allow_html=True)
+        
+        if top_tracks and top_artists:
+            # Get seed data for recommendations
+            seed_track_ids = [track['id'] for track in top_tracks['items'][:2]]
+            seed_artist_ids = [artist['id'] for artist in top_artists['items'][:3]]
+            
+            if use_simulation:
+                # Simulated recommendations
+                recommendations = get_simulated_data(time_range)['recommendations']
+            else:
+                # Get real recommendations
+                recommendations = get_recommendations(
+                    sp, 
+                    seed_tracks=seed_track_ids, 
+                    seed_artists=seed_artist_ids,
+                    limit=10
+                )
+            
+            if recommendations and 'tracks' in recommendations:
+                # Display in a grid layout
+                columns = 5 if not st.session_state.mobile_view else 2
+                rows = (len(recommendations['tracks']) + columns - 1) // columns
+                
+                # Create grid
+                for row in range(rows):
+                    cols = st.columns(columns)
+                    for col in range(columns):
+                        idx = row * columns + col
+                        if idx < len(recommendations['tracks']):
+                            track = recommendations['tracks'][idx]
+                            with cols[col]:
+                                st.markdown(f'''
+                                    <div class="recommendation-card">
+                                        <img src="{track['album']['images'][0]['url']}" alt="{track['name']}" 
+                                             style="width: 100%; border-radius: 8px;">
+                                        <p style="font-weight: bold; margin: 5px 0 0 0; white-space: nowrap; 
+                                                  overflow: hidden; text-overflow: ellipsis;">
+                                            {track['name']}
+                                        </p>
+                                        <p style="margin: 0; color: var(--text-secondary); white-space: nowrap; 
+                                                  overflow: hidden; text-overflow: ellipsis;">
+                                            {track['artists'][0]['name']}
+                                        </p>
+                                    </div>
+                                ''', unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()

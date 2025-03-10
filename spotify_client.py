@@ -2,6 +2,10 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import streamlit as st
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 def get_redirect_uri():
     """Get the appropriate redirect URI based on the environment."""
@@ -126,4 +130,24 @@ def get_top_albums(sp, time_range='medium_term', limit=10):
         return {'items': album_list}
     except Exception as e:
         st.error(f"Error fetching top albums: {str(e)}")
+        return None
+
+def get_recommendations(sp, seed_tracks=None, seed_artists=None, limit=10):
+    """Get track recommendations based on seed tracks or artists."""
+    try:
+        # Prepare seed parameters
+        params = {'limit': limit}
+        
+        if seed_tracks:
+            params['seed_tracks'] = seed_tracks[:5]  # Maximum 5 seeds allowed
+        
+        if seed_artists and (not seed_tracks or len(seed_tracks) < 5):
+            max_artists = 5 - (len(seed_tracks) if seed_tracks else 0)
+            params['seed_artists'] = seed_artists[:max_artists]
+            
+        # Get recommendations
+        recommendations = sp.recommendations(**params)
+        return recommendations
+    except Exception as e:
+        st.error(f"Error fetching recommendations: {str(e)}")
         return None

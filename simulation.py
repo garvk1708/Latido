@@ -85,7 +85,7 @@ def generate_album(index):
     album_types = ['Album', 'EP', 'Single', 'Compilation']
     album_names = ['Neon Dreams', 'Digital Horizons', 'Quantum Pulse', 
                   'Synthetic Memories', 'Virtual Reality', 'Electric Forest']
-    
+
     return {
         'id': f'album_{index}',
         'name': f'{random.choice(album_names)} {index}',
@@ -110,12 +110,26 @@ def get_simulated_data(time_range='medium_term'):
     artists = [generate_artist(i) for i in range(artist_count)]
     albums = [generate_album(i) for i in range(album_count)]
     audio_features = [generate_audio_features() for _ in range(track_count)]
+    profile = generate_simulated_profile()
+    top_tracks = {'items': tracks}
+    top_artists = {'items': artists}
+    top_albums = {'items': albums}
+    recent_tracks = generate_recent_tracks()
+
+    # Generate simulated recommendations
+    recommendations = {
+        'tracks': [
+            generate_track(i) 
+            for i in range(10)
+        ]
+    }
 
     return {
-        'profile': generate_simulated_profile(),
-        'top_tracks': {'items': tracks},
-        'top_artists': {'items': artists},
-        'top_albums': {'items': albums},
-        'recent_tracks': generate_recent_tracks(),
-        'audio_features': audio_features
+        'profile': profile,
+        'top_tracks': top_tracks,
+        'top_artists': top_artists,
+        'top_albums': top_albums,
+        'recent_tracks': recent_tracks,
+        'audio_features': audio_features,
+        'recommendations': recommendations
     }

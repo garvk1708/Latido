@@ -1,10 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
+/* Theme variables */
+:root {
+    --primary-color: #1DB954;
+    --secondary-color: #4169E1;
+    --background-color: #ffffff;
+    --card-background: #f8f9fa;
+    --text-color: #333333;
+    --text-secondary: #888888;
+}
+
+[data-theme="dark"] {
+    --primary-color: #1ED760;
+    --secondary-color: #4169E1;
+    --background-color: #121212;
+    --card-background: #1e1e1e;
+    --text-color: #ffffff;
+    --text-secondary: #b3b3b3;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
 /* Base styles with modern dark theme */
 html, body, [class*="css"] {
     font-family: 'Montserrat', sans-serif;
-    color: #FFFFFF;
-    background-color: #121212;
 }
 
 /* Hero section with glassmorphism */
@@ -158,14 +181,14 @@ html, body, [class*="css"] {
 
 /* Gradient text and buttons */
 .gradient-text {
-    background: linear-gradient(120deg, #1DB954, #1ed760);
+    background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 700;
 }
 
 .gradient-button {
-    background: linear-gradient(45deg, #1DB954, #1ed760);
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
     color: white;
     padding: 12px 24px;
     border-radius: 25px;
@@ -201,7 +224,7 @@ html, body, [class*="css"] {
 .track-number {
     font-size: 1.2rem;
     font-weight: 700;
-    color: #1DB954;
+    color: var(--primary-color);
     margin-right: 1rem;
 }
 
@@ -222,7 +245,7 @@ html, body, [class*="css"] {
 }
 
 .track-artist {
-    color: #888;
+    color: var(--text-secondary);
     font-size: 0.9rem;
 }
 
@@ -238,7 +261,7 @@ html, body, [class*="css"] {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #1DB954;
+    background: var(--primary-color);
     border-radius: 4px;
     transition: all 0.3s ease;
 }
@@ -252,10 +275,43 @@ html, body, [class*="css"] {
     font-size: 1.8rem;
     margin-bottom: 1rem;
     text-align: center;
-    background: linear-gradient(90deg, #1DB954, #4CAF50);
+    background: linear-gradient(90deg, var(--primary-color), #4CAF50);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     padding: 10px 0;
+}
+
+
+/* Recommendation cards */
+.recommendation-card {
+    background-color: var(--card-background);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.recommendation-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    background-color: var(--card-background);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 /* Mobile-specific adjustments */
@@ -283,6 +339,9 @@ html, body, [class*="css"] {
     button, select, a {
         min-height: 36px !important;
         min-width: 36px !important;
+    }
+    .recommendation-card {
+        margin-bottom: 10px;
     }
 }
 
@@ -323,5 +382,8 @@ html, body, [class*="css"] {
     .row-widget.stHorizontal > div {
         width: 100% !important;
         margin-bottom: 1rem;
+    }
+    .track-item {
+        width: 100%;
     }
 }
