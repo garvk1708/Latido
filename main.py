@@ -159,7 +159,7 @@ def main():
 
         with col2:
             # Simulation mode toggle with styled button
-            use_simulation = st.checkbox("✨ Demo Mode", value=True, 
+            use_simulation = st.checkbox("✨ Demo Mode", value=False, 
                                         help="Try the dashboard with simulated data")
 
         st.markdown('</div>', unsafe_allow_html=True)
@@ -187,7 +187,15 @@ def main():
                 # Show a customized loading spinner
                 with st.spinner("🎵 Connecting to Spotify..."):
                     sp = create_spotify_client()
+                    if not sp:
+                        st.error("Spotify authentication failed. Try using Demo Mode instead.")
+                        st.info("If you're trying to authenticate, make sure you've registered http://0.0.0.0:5000/callback as a redirect URI in your Spotify Developer account.")
+                        st.stop()
+                    
                     profile = get_user_profile(sp)
+                    if not profile:
+                        st.error("Could not retrieve user profile. Try using Demo Mode instead.")
+                        st.stop()
 
                 # Use a different spinner for analyzing music
                 with st.spinner("🎼 Analyzing your musical heartbeat..."):
@@ -200,10 +208,11 @@ def main():
                         track_ids = [track['id'] for track in top_tracks['items']]
                         audio_features = get_audio_features(sp, track_ids)
                     else:
-                        st.error("Failed to fetch your music data.")
+                        st.error("Failed to fetch your music data. Try using Demo Mode instead.")
                         st.stop()
             except Exception as e:
                 st.error(f"Authentication failed: {str(e)}")
+                st.warning("Please try using Demo Mode or check your Spotify Developer credentials.")
                 st.stop()
 
     # Process and display data

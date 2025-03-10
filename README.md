@@ -60,13 +60,10 @@ To modify this application:
 3. Extend `analysis.py` to implement new data analysis methods
 4. Update `main.py` to change the UI layout and components
 
-## Deployment
+## Running the App
 
-The app is set up for easy deployment:
-
-1. The app will run automatically on Replit
-2. For public sharing, click the "Run" button at the top of the page
-3. Share the provided URL with others
+1. The app will run automatically when you click the Run button
+2. Log in with your Spotify account or use Demo Mode to explore the functionality
 
 ## Troubleshooting
 

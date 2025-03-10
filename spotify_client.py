@@ -10,8 +10,8 @@ load_dotenv()
 
 def get_redirect_uri():
     """Get the appropriate redirect URI based on the environment."""
-    # For local development
-    return "http://localhost:5000"
+    # For local development with callback path
+    return "http://0.0.0.0:5000/callback"
 
 def create_spotify_client():
     """Create and return an authenticated Spotify client."""
@@ -171,19 +171,7 @@ def get_recommendations(sp, seed_tracks=None, seed_artists=None, limit=10, audio
         st.error(f"Error fetching recommendations: {str(e)}")
         return None
 
-def create_spotify_client():
-    """Create and return a Spotify client."""
-    try:
-        # Initialize Spotify client with OAuth
-        sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
-            scope="user-top-read user-read-recently-played",
-            redirect_uri="http://localhost:8501",
-            show_dialog=True
-        ))
-        return sp
-    except Exception as e:
-        st.error(f"Failed to initialize Spotify client: {str(e)}")
-        return None
+# This duplicate method is removed as it's already defined above
 
 def get_user_profile(sp):
     """Get the user's Spotify profile."""
