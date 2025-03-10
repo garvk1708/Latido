@@ -3,6 +3,34 @@ import plotly.express as px
 import pandas as pd
 from datetime import datetime
 import numpy as np
+import streamlit as st
+
+def add_logo_styling():
+    """Add custom CSS to fix logo alignment issues"""
+    st.markdown("""
+        <style>
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 0 auto;
+            padding-bottom: 10px;
+        }
+        
+        .latido-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #FF3366;
+            margin-top: 5px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+            letter-spacing: 1px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
 def create_audio_features_radar(audio_features_df):
     """Create a radar chart of audio features."""

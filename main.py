@@ -47,6 +47,10 @@ import os
 # Load custom CSS
 with open('.streamlit/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+    
+# Add custom logo styling
+from visualizations import add_logo_styling
+add_logo_styling()
 
 # Inline SVG logo for Latido - Using a simplified approach that works better with Streamlit
 latido_logo = '''

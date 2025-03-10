@@ -1,36 +1,39 @@
+
 # Latido 💓 - El ritmo de tu corazón musical
 
-Una aplicación impulsada por IA que revela el latido único de tus gustos musicales a través de análisis avanzados y visualizaciones elegantes.
+![Latido Logo](generated-icon.png)
 
-## Características
-- **Análisis con IA**: Obtén información personalizada sobre tus gustos musicales y patrones de escucha
-- **Perfil Musical Único**: Descubre tu personalidad musical basada en tus elecciones de canciones
-- **Recomendaciones Inteligentes**: Recibe sugerencias musicales adaptadas a tu perfil de gustos
-- **Filtros Temporales**: Explora tus tendencias con filtros para 4 semanas, 6 meses y todo el tiempo
-- **Visualizaciones Interactivas**: Visualiza tus preferencias musicales con gráficos dinámicos
-- **Contenido Destacado**: Ve tus canciones, artistas y álbumes favoritos en una interfaz elegante
-- **Análisis de Estado de Ánimo**: Comprende los patrones emocionales en tu música
-- **Distribución de Géneros**: Observa un desglose de tus géneros musicales favoritos
-- **Diseño Responsivo**: Optimizado tanto para escritorio como para dispositivos móviles
+## Overview
+Latido is an AI-powered web application that reveals the unique heartbeat of your musical tastes through advanced analysis and elegant visualizations. Discover insights about your Spotify listening habits and get personalized recommendations.
 
-## Modo Demo
+## Features
+- **AI-Powered Analysis**: Get personalized insights about your music tastes and listening patterns
+- **Unique Musical Profile**: Discover your musical personality based on your song choices
+- **Smart Recommendations**: Receive music suggestions tailored to your taste profile
+- **Time Filters**: Explore your trends with filters for 4 weeks, 6 months, and all time
+- **Interactive Visualizations**: Visualize your musical preferences with dynamic charts
+- **Featured Content**: See your favorite songs, artists, and albums in an elegant interface
+- **Mood Analysis**: Understand emotional patterns in your music
+- **Genre Distribution**: View a breakdown of your favorite music genres
+- **Responsive Design**: Optimized for both desktop and mobile devices
 
-¿No quieres conectar tu cuenta de Spotify? ¡Usa el Modo Demo para explorar el panel con datos simulados!
+## Demo Mode
 
-## Inicio Rápido
+Don't want to connect your Spotify account? Use the Demo Mode to explore the dashboard with simulated data!
 
-1. La aplicación ya está configurada para ejecutarse inmediatamente
-2. Haz clic en el botón Ejecutar en la parte superior de la página
-3. Opcional: Conecta tu cuenta de Spotify o usa el Modo Demoode
+## Quick Start
+
+1. Click the Run button at the top of the page
+2. The app will start automatically with the Streamlit server
+3. Optional: Connect your Spotify account or use Demo Mode
 
 ## Using the Dashboard
 
-- Connect your Spotify account to see your personalized insights, or use "Demo Mode" to explore with simulated data
-- Filter your music insights by time range (4 weeks, 6 months, or all time)
-- Get AI-powered insights about your music taste and listening patterns
-- Explore your top tracks, artists, and albums
-- Discover song recommendations tailored to your unique preferences
-- View your audio feature analysis through interactive visualizations
+- **Connect Spotify**: Connect your Spotify account to see your personalized insights, or use "Demo Mode"
+- **Filter by Time**: Filter your music insights by time range (4 weeks, 6 months, or all time)
+- **Explore Stats**: View your top tracks, artists, and albums
+- **Get Insights**: Discover AI-powered insights about your music taste
+- **Mobile View**: Toggle mobile view for optimized experience on smaller screens
 
 ## Project Structure
 - `main.py`: Main application and UI components
@@ -48,6 +51,14 @@ Una aplicación impulsada por IA que revela el latido único de tus gustos music
 - Scikit-learn (Machine learning for insights)
 - Plotly (Interactive visualizations)
 - Python-dotenv (Environment management)
+
+## Development
+
+To modify this application:
+1. Edit the `.streamlit/style.css` file to change the appearance
+2. Modify `visualizations.py` to update or add new data visualizations
+3. Extend `analysis.py` to implement new data analysis methods
+4. Update `main.py` to change the UI layout and components
 
 ## License
 MIT License
