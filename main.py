@@ -19,7 +19,7 @@ from simulation import get_simulated_data
 
 # Page configuration
 st.set_page_config(
-    page_title="Latido - Ritmo del Corazón",
+    page_title="Latido - Musical Heart Rhythm",
     page_icon="💓",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -51,7 +51,7 @@ def create_hero_section():
                 {latido_logo}
             </div>
             <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; font-weight: 400;">
-                <span class="tagline">El ritmo de tu corazón musical</span>
+                <span class="tagline">The rhythm of your musical heart</span>
             </h2>
         </div>
     ''', unsafe_allow_html=True)
@@ -119,17 +119,17 @@ def main():
         
         with col1:
             # Mobile view toggle with styled button
-            mobile_view = st.checkbox("📱 Vista Móvil", value=st.session_state.mobile_view)
+            mobile_view = st.checkbox("📱 Mobile View", value=st.session_state.mobile_view)
             st.session_state.mobile_view = mobile_view
         
         with col2:
             # Time range filter with styled dropdown
             time_range = st.selectbox(
-                "📅 Periodo de tiempo",
+                "📅 Time Period",
                 options=[
-                    ("short_term", "Últimas 4 semanas"),
-                    ("medium_term", "Últimos 6 meses"),
-                    ("long_term", "Todo el tiempo")
+                    ("short_term", "Last 4 weeks"),
+                    ("medium_term", "Last 6 months"),
+                    ("long_term", "All time")
                 ],
                 format_func=lambda x: x[1],
                 index=1  # Default to medium_term
@@ -137,8 +137,8 @@ def main():
         
         with col3:
             # Simulation mode toggle with styled button
-            use_simulation = st.checkbox("✨ Modo Demo", value=True, 
-                                        help="Prueba el dashboard con datos simulados")
+            use_simulation = st.checkbox("✨ Demo Mode", value=True, 
+                                        help="Try the dashboard with simulated data")
         
         st.markdown('</div>', unsafe_allow_html=True)
         
