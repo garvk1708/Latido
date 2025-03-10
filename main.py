@@ -53,6 +53,20 @@ def display_track_item(track, index):
         </div>
     ''', unsafe_allow_html=True)
 
+def display_artist_item(artist, index):
+    """Display an artist with image and hover effects."""
+    st.markdown(f'''
+        <div class="track-item">
+            <div class="track-number">{index}</div>
+            <img src="{artist['images'][0]['url']}" 
+                 class="track-image" alt="{artist['name']}">
+            <div class="track-info">
+                <div class="track-name">{artist['name']}</div>
+                <div class="track-artist">Artist</div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
 def main():
     # Inject JavaScript for device detection
     st.markdown('''
@@ -198,7 +212,7 @@ def main():
                 
             st.subheader("👥 Top Artists")
             for i, artist in enumerate(top_artists['items'][:5], 1):
-                display_track_item(artist, i)
+                display_artist_item(artist, i)
             st.markdown('</div>', unsafe_allow_html=True)
         else:
             # Desktop view - side by side
@@ -214,7 +228,7 @@ def main():
                 st.markdown('<div class="scroll-fade">', unsafe_allow_html=True)
                 st.subheader("👥 Top Artists")
                 for i, artist in enumerate(top_artists['items'][:5], 1):
-                    display_track_item(artist, i)
+                    display_artist_item(artist, i)
                 st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
