@@ -5,41 +5,44 @@ import os
 
 def get_redirect_uri():
     """Get the appropriate redirect URI based on the environment."""
-    is_production = os.environ.get('VERCEL_ENV') == 'production'
-    if is_production:
-        # Use the Vercel deployment URL
-        vercel_url = os.environ.get('VERCEL_URL')
-        return f"https://{vercel_url}"
+    # For local development
     return "http://localhost:5000"
 
 def create_spotify_client():
     """Create and return an authenticated Spotify client."""
-    # Cache the token info in Streamlit's session state
-    if not hasattr(st.session_state, 'spotify_token_info'):
-        st.session_state.spotify_token_info = None
-
     try:
         redirect_uri = get_redirect_uri()
-        oauth_manager = SpotifyOAuth(
+
+        # Initialize OAuth Manager
+        auth_manager = SpotifyOAuth(
             client_id=os.getenv("SPOTIPY_CLIENT_ID"),
             client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
             redirect_uri=redirect_uri,
             scope="user-top-read user-read-recently-played user-library-read",
-            cache_handler=None  # Disable file caching
+            show_dialog=True  # Force display of auth dialog
         )
 
-        if st.session_state.spotify_token_info is None:
-            auth_url = oauth_manager.get_authorize_url()
+        # Check if we need to start the auth flow
+        if not st.session_state.get('token_info'):
+            # Get the auth URL
+            auth_url = auth_manager.get_authorize_url()
+
+            # Display login page with styled button
             st.markdown(
                 f"""
-                <div class="fade-in">
-                    <h3>Welcome to Spotify Analytics!</h3>
-                    <p>Please authenticate with Spotify to continue.</p>
+                <div style="text-align: center; padding: 2rem;">
+                    <h2 style="color: #1DB954; margin-bottom: 1.5rem;">Welcome to Spotify Analytics!</h2>
+                    <p style="margin-bottom: 2rem;">Connect your Spotify account to see your personalized music insights.</p>
                     <a href="{auth_url}" target="_self" 
-                       style="background-color: #1DB954; color: white; padding: 10px 20px; 
-                              border-radius: 20px; text-decoration: none; display: inline-block;
-                              margin-top: 10px; font-weight: bold;">
-                        Login with Spotify
+                       style="background-color: #1DB954; 
+                              color: white; 
+                              padding: 12px 24px; 
+                              border-radius: 24px; 
+                              text-decoration: none; 
+                              font-weight: bold;
+                              transition: all 0.3s ease;
+                              display: inline-block;">
+                        Connect with Spotify
                     </a>
                 </div>
                 """,
@@ -47,15 +50,15 @@ def create_spotify_client():
             )
             st.stop()
 
-        sp = spotipy.Spotify(auth_manager=oauth_manager)
-        # Test the connection
-        sp.current_user()
+        # Create and return Spotify client
+        sp = spotipy.Spotify(auth_manager=auth_manager)
+        sp.current_user()  # Test the connection
         return sp
 
     except Exception as e:
         if "invalid_grant" in str(e):
             # Clear the session state and redirect to login
-            st.session_state.spotify_token_info = None
+            st.session_state.token_info = None
             st.experimental_rerun()
         raise Exception(f"Authentication failed: {str(e)}")
 
