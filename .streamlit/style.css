@@ -508,3 +508,41 @@ html, body, [class*="css"] {
         width: 100%;
     }
 }
+
+/* Custom loading animation */
+.stSpinner > div {
+    border-color: var(--primary-color) !important;
+    border-bottom-color: transparent !important;
+    width: 30px !important;
+    height: 30px !important;
+}
+
+/* Pulse animation for the spinner text */
+.stSpinner + div p {
+    animation: pulseFade 1.5s ease-in-out infinite;
+    color: var(--primary-color) !important;
+    font-weight: 500 !important;
+}
+
+@keyframes pulseFade {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+/* Improve logo display */
+.logo-container {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-container svg {
+    filter: drop-shadow(0 0 5px rgba(255, 51, 102, 0.3));
+}
+
+/* Ensure Latido text is visible */
+.logo-container div {
+    text-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+    letter-spacing: 1px;
+}

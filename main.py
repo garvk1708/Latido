@@ -29,12 +29,14 @@ st.set_page_config(
 with open('.streamlit/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-# Inline SVG logo for Latido
+# Inline SVG logo for Latido - Using a simplified approach that works better with Streamlit
 latido_logo = '''
-<svg width="120" height="48" viewBox="0 0 120 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M20.5 8.5C17.5 11.5 6.5 28.5 5 30.5C3.5 32.5 4 38 9 38C14 38 18 33.5 20.5 30.5C23 27.5 26.5 22 28 20C29.5 18 35.5 10 40 10C44.5 10 44.5 13.5 43 17C41.5 20.5 38 25 36.5 27C35 29 31 34 29.5 35.5C28 37 23 42 23 42" stroke="#FF3366" stroke-width="3" stroke-linecap="round"/>
-  <text x="50" y="30" font-family="Arial" font-size="22" font-weight="700" fill="#FF3366">LATIDO</text>
-</svg>
+<div style="text-align: center; margin-bottom: 1rem;">
+  <svg width="120" height="48" viewBox="0 0 120 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20.5 8.5C17.5 11.5 6.5 28.5 5 30.5C3.5 32.5 4 38 9 38C14 38 18 33.5 20.5 30.5C23 27.5 26.5 22 28 20C29.5 18 35.5 10 40 10C44.5 10 44.5 13.5 43 17C41.5 20.5 38 25 36.5 27C35 29 31 34 29.5 35.5C28 37 23 42 23 42" stroke="#FF3366" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+  <div style="font-family: Arial, sans-serif; font-size: 22px; font-weight: 700; color: #FF3366; margin-top: -30px;">LATIDO</div>
+</div>
 '''
 
 def get_base64_of_bin_file(bin_file):
@@ -50,7 +52,7 @@ def create_hero_section():
             <div class="logo-container">
                 {latido_logo}
             </div>
-            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; font-weight: 400;">
+            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; font-weight: 400; text-align: center;">
                 <span class="tagline">The rhythm of your musical heart</span>
             </h2>
         </div>
@@ -145,22 +147,30 @@ def main():
         # Add a separator line
         st.markdown('<hr class="separator">', unsafe_allow_html=True)
     
-    if use_simulation:
-        # Use simulated data
-        data = get_simulated_data(time_range)
-        profile = data['profile']
-        top_tracks = data['top_tracks']
-        top_artists = data['top_artists']
-        top_albums = data['top_albums']
-        recent_tracks = data['recent_tracks']
-        audio_features = data['audio_features']
+    # Display loading animation
+    with st.container():
+        if use_simulation:
+            with st.spinner("🎵 Loading your musical profile..."):
+                # Add small delay to show loading animation
+                time.sleep(1)
+                # Use simulated data
+                data = get_simulated_data(time_range)
+                profile = data['profile']
+                top_tracks = data['top_tracks']
+                top_artists = data['top_artists']
+                top_albums = data['top_albums']
+                recent_tracks = data['recent_tracks']
+                audio_features = data['audio_features']
     else:
         # Initialize Spotify client and get real data
         try:
-            sp = create_spotify_client()
-            profile = get_user_profile(sp)
+            # Show a customized loading spinner
+            with st.spinner("🎵 Connecting to Spotify..."):
+                sp = create_spotify_client()
+                profile = get_user_profile(sp)
 
-            with st.spinner("🎼 Analyzing your music..."):
+            # Use a different spinner for analyzing music
+            with st.spinner("🎼 Analyzing your musical heartbeat..."):
                 top_tracks = get_top_tracks(sp, time_range)
                 top_artists = get_top_artists(sp, time_range)
                 top_albums = get_top_albums(sp, time_range)
