@@ -396,7 +396,7 @@ def main():
                             track = recommendations['tracks'][idx]
                             with cols[col]:
                                 st.markdown(f'''
-                                    <div class="recommendation-card">
+                                    <div class="recommendation-card" style="--i: {idx}">
                                         <img src="{track['album']['images'][0]['url']}" alt="{track['name']}" 
                                              style="width: 100%; border-radius: 8px;">
                                         <p style="font-weight: bold; margin: 5px 0 0 0; white-space: nowrap; 

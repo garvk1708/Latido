@@ -1,3 +1,10 @@
+
+/* Enable smooth scrolling for the whole page */
+html {
+    scroll-behavior: smooth;
+}
+
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
 /* Theme variables */
@@ -33,6 +40,26 @@ html, body, [class*="css"] {
     transform-style: preserve-3d;
     perspective: 1000px;
     animation: heroFadeIn 1s ease-out forwards;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,51,102,0.08) 0%, rgba(0,0,0,0) 70%);
+    animation: pulseGlow 10s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes pulseGlow {
+    0% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.1); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 0.3; }
 }
 
 @keyframes heroFadeIn {
@@ -46,6 +73,20 @@ html, body, [class*="css"] {
         transform: translateY(0) scale(1);
         filter: blur(0);
     }
+}
+
+.tagline {
+    display: inline-block;
+    position: relative;
+    animation: taglineFloat 4s ease-in-out infinite;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+@keyframes taglineFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
 }
 
 /* Modern card styling with glassmorphism */
@@ -118,6 +159,18 @@ html, body, [class*="css"] {
     opacity: 0;
     transform: translateY(20px);
     transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .scroll-fade.visible {
@@ -205,12 +258,30 @@ html, body, [class*="css"] {
     margin-bottom: 1rem;
     background: rgba(40, 40, 40, 0.5);
     border-radius: 12px;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
 .track-item:hover {
-    transform: scale(1.02);
+    transform: scale(1.02) translateX(3px);
     background: rgba(40, 40, 40, 0.8);
+    box-shadow: 0 5px 15px rgba(255, 51, 102, 0.2);
+}
+
+.track-item::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 0;
+    background: linear-gradient(90deg, var(--primary-color), transparent);
+    transition: width 0.4s ease;
+}
+
+.track-item:hover::after {
+    width: 100%;
 }
 
 .track-number {
@@ -280,16 +351,32 @@ html, body, [class*="css"] {
     border-radius: 10px;
     padding: 12px;
     margin-bottom: 15px;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     border-bottom: 2px solid var(--primary-color);
     position: relative;
     overflow: hidden;
+    opacity: 0;
+    animation: cardCascade 0.5s ease forwards;
+    animation-delay: calc(var(--i, 0) * 0.1s);
+}
+
+@keyframes cardCascade {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
 .recommendation-card:hover {
     transform: translateY(-5px) scale(1.03);
     box-shadow: 0 8px 20px rgba(255, 51, 102, 0.2);
+}
+
+.recommendation-card img {
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.recommendation-card:hover img {
+    transform: scale(1.05);
 }
 
 .recommendation-card::before {
